@@ -1,0 +1,101 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="소스 파일">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="리소스 파일">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="소스 파일\99. pch">
+      <UniqueIdentifier>{adf78773-0afb-42f8-ad2c-1bbee365eaee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\00. Main">
+      <UniqueIdentifier>{187189ac-43b3-4e3c-b5d6-2e470f6ec021}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\01. Manager">
+      <UniqueIdentifier>{b85245cc-28d8-44ad-8a9e-1cfa95982853}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\02. RingBuffer">
+      <UniqueIdentifier>{c7ae990a-26cb-4b60-9bdf-79c4453a50f2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\03. Packet">
+      <UniqueIdentifier>{34b8e42f-927d-4696-aefc-52ea827bcff7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\98. Defines">
+      <UniqueIdentifier>{fac1a78a-02ee-476e-84c4-c0ac1bac4c04}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\01. Manager\WinSockMgr">
+      <UniqueIdentifier>{9b26c7a9-1768-4eb8-ab5a-38b6eb99250d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\01. Manager\ObjectMgr">
+      <UniqueIdentifier>{3da441a0-9f4e-4a0f-ad09-81303033ca24}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\01. Manager\ObjectMgr\Object">
+      <UniqueIdentifier>{a662cbe2-dbeb-4163-b676-05513fe06b9f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\01. Manager\ObjectMgr\Object\Player">
+      <UniqueIdentifier>{2330dc20-528e-43bc-8788-c941732c349b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\01. Manager\TimerMgr">
+      <UniqueIdentifier>{e0debb53-a0eb-4281-b4f9-e2e4013886e9}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="pch.cpp">
+      <Filter>소스 파일\99. pch</Filter>
+    </ClCompile>
+    <ClCompile Include="Main.cpp">
+      <Filter>소스 파일\00. Main</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>소스 파일\01. Manager\ObjectMgr\Object\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="Object.cpp">
+      <Filter>소스 파일\01. Manager\ObjectMgr\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectManager.cpp">
+      <Filter>소스 파일\01. Manager\ObjectMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="TimerManager.cpp">
+      <Filter>소스 파일\01. Manager\TimerMgr</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="WinSockManager.h">
+      <Filter>소스 파일\01. Manager\WinSockMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="pch.h">
+      <Filter>소스 파일\99. pch</Filter>
+    </ClInclude>
+    <ClInclude Include="PacketHeader.h">
+      <Filter>소스 파일\03. Packet</Filter>
+    </ClInclude>
+    <ClInclude Include="PacketDefine.h">
+      <Filter>소스 파일\03. Packet</Filter>
+    </ClInclude>
+    <ClInclude Include="RingBuffer.h">
+      <Filter>소스 파일\02. RingBuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="Singleton.h">
+      <Filter>소스 파일\01. Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Defines.h">
+      <Filter>소스 파일\98. Defines</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectManager.h">
+      <Filter>소스 파일\01. Manager\ObjectMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="Object.h">
+      <Filter>소스 파일\01. Manager\ObjectMgr\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>소스 파일\01. Manager\ObjectMgr\Object\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="TimerManager.h">
+      <Filter>소스 파일\01. Manager\TimerMgr</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
