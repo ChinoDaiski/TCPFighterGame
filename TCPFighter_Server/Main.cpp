@@ -294,6 +294,8 @@ int main()
                     UINT16 x, y;
                     client->pPlayer->getPosition(x, y);
                     std::cout << client->uid << " / " << x << ", " << y << "\n";
+
+                    
                 }
 
                 // 플레이어가 죽었다면
@@ -606,14 +608,22 @@ void processReceivedPacket(SESSION* session, PACKET_TYPE pt, void* pData)
     {
         // 클라이언트로 부터 공격 메시지가 들어옴.
         // g_clientList를 순회하며 공격 1의 범위를 연산해서 데미지를 넣어줌.
-        // 1. 공격받을 캐릭터를 검색. 검색에 성공하면 2, 3번 절차 진행
-        // 2. dfPACKET_SC_ATTACK1 을 브로드캐스팅
+        // 1. dfPACKET_SC_ATTACK1 을 브로드캐스팅
+        // 2. 공격받을 캐릭터를 검색. 검색에 성공하면 3, 4번 절차 진행
         // 3. dfPACKET_SC_DAMAGE 를 브로드캐스팅
         // 4. 만약 체력이 0 이하로 떨어졌다면 dfPACKET_SC_DELETE_CHARACTER 를 브로드캐스팅하고, 서버에서 삭제할 수 있도록 함
 
+        //=====================================================================================================================================
+        // 1. dfPACKET_SC_ATTACK1 을 브로드캐스팅
+        //=====================================================================================================================================
+        PACKET_SC_ATTACK1 packetAttack1;
+        packetAttack1.direction = session->pPlayer->GetFacingDirection();
+        packetAttack1.playerID = session->uid;
+        session->pPlayer->getPosition(packetAttack1.x, packetAttack1.y);
+        BroadcastPacket(nullptr, &packetAttack1, sizeof(packetAttack1), static_cast<UINT8>(PACKET_TYPE::SC_ATTACK1));
 
         //=====================================================================================================================================
-        // 1. 공격받을 캐릭터를 검색. 검색에 성공하면 2, 3번 절차 진행
+        // 2. 공격받을 캐릭터를 검색. 검색에 성공하면 3, 4번 절차 진행
         //=====================================================================================================================================
 
         // 내가 바라보는 방향에 따라 공격 범위가 달라짐.
@@ -648,15 +658,6 @@ void processReceivedPacket(SESSION* session, PACKET_TYPE pt, void* pData)
             if (posX >= left && posX <= right &&
                 posY >= top && posY <= bottom)
             {
-                //=====================================================================================================================================
-                // 2. dfPACKET_SC_ATTACK1 을 브로드캐스팅
-                //=====================================================================================================================================
-                PACKET_SC_ATTACK1 packetAttack1;
-                packetAttack1.direction = session->pPlayer->GetFacingDirection();
-                packetAttack1.playerID = session->uid;
-                session->pPlayer->getPosition(packetAttack1.x, packetAttack1.y);
-                BroadcastPacket(nullptr, &packetAttack1, sizeof(packetAttack1), static_cast<UINT8>(PACKET_TYPE::SC_ATTACK1));
-
                 //=====================================================================================================================================
                 // 3. dfPACKET_SC_DAMAGE 를 브로드캐스팅
                 //=====================================================================================================================================
@@ -698,15 +699,23 @@ void processReceivedPacket(SESSION* session, PACKET_TYPE pt, void* pData)
     case PACKET_TYPE::CS_ATTACK2:
     {
         // 클라이언트로 부터 공격 메시지가 들어옴.
-        // g_clientList를 순회하며 공격 2의 범위를 연산해서 데미지를 넣어줌.
-        // 1. 공격받을 캐릭터를 검색. 검색에 성공하면 2, 3번 절차 진행
-        // 2. dfPACKET_SC_ATTACK2 을 브로드캐스팅
+        // g_clientList를 순회하며 공격 1의 범위를 연산해서 데미지를 넣어줌.
+        // 1. dfPACKET_SC_ATTACK2 를 브로드캐스팅
+        // 2. 공격받을 캐릭터를 검색. 검색에 성공하면 3, 4번 절차 진행
         // 3. dfPACKET_SC_DAMAGE 를 브로드캐스팅
         // 4. 만약 체력이 0 이하로 떨어졌다면 dfPACKET_SC_DELETE_CHARACTER 를 브로드캐스팅하고, 서버에서 삭제할 수 있도록 함
 
+        //=====================================================================================================================================
+        // 1. dfPACKET_SC_ATTACK2 을 브로드캐스팅
+        //=====================================================================================================================================
+        PACKET_SC_ATTACK2 packetAttack2;
+        packetAttack2.direction = session->pPlayer->GetFacingDirection();
+        packetAttack2.playerID = session->uid;
+        session->pPlayer->getPosition(packetAttack2.x, packetAttack2.y);
+        BroadcastPacket(nullptr, &packetAttack2, sizeof(packetAttack2), static_cast<UINT8>(PACKET_TYPE::SC_ATTACK2));
 
         //=====================================================================================================================================
-        // 1. 공격받을 캐릭터를 검색. 검색에 성공하면 2, 3번 절차 진행
+        // 2. 공격받을 캐릭터를 검색. 검색에 성공하면 3, 4번 절차 진행
         //=====================================================================================================================================
 
         // 내가 바라보는 방향에 따라 공격 범위가 달라짐.
@@ -741,15 +750,6 @@ void processReceivedPacket(SESSION* session, PACKET_TYPE pt, void* pData)
             if (posX >= left && posX <= right &&
                 posY >= top && posY <= bottom)
             {
-                //=====================================================================================================================================
-                // 2. dfPACKET_SC_ATTACK1 을 브로드캐스팅
-                //=====================================================================================================================================
-                PACKET_SC_ATTACK2 packetAttack2;
-                packetAttack2.direction = session->pPlayer->GetFacingDirection();
-                packetAttack2.playerID = session->uid;
-                session->pPlayer->getPosition(packetAttack2.x, packetAttack2.y);
-                BroadcastPacket(nullptr, &packetAttack2, sizeof(packetAttack2), static_cast<UINT8>(PACKET_TYPE::SC_ATTACK2));
-
                 //=====================================================================================================================================
                 // 3. dfPACKET_SC_DAMAGE 를 브로드캐스팅
                 //=====================================================================================================================================
@@ -791,18 +791,26 @@ void processReceivedPacket(SESSION* session, PACKET_TYPE pt, void* pData)
     case PACKET_TYPE::CS_ATTACK3:
     {
         // 클라이언트로 부터 공격 메시지가 들어옴.
-       // g_clientList를 순회하며 공격 3의 범위를 연산해서 데미지를 넣어줌.
-       // 1. 공격받을 캐릭터를 검색. 검색에 성공하면 2, 3번 절차 진행
-       // 2. dfPACKET_SC_ATTACK3 을 브로드캐스팅
-       // 3. dfPACKET_SC_DAMAGE 를 브로드캐스팅
-       // 4. 만약 체력이 0 이하로 떨어졌다면 dfPACKET_SC_DELETE_CHARACTER 를 브로드캐스팅하고, 서버에서 삭제할 수 있도록 함
+        // g_clientList를 순회하며 공격 1의 범위를 연산해서 데미지를 넣어줌.
+        // 1. dfPACKET_SC_ATTACK3 을 브로드캐스팅
+        // 2. 공격받을 캐릭터를 검색. 검색에 성공하면 3, 4번 절차 진행
+        // 3. dfPACKET_SC_DAMAGE 를 브로드캐스팅
+        // 4. 만약 체력이 0 이하로 떨어졌다면 dfPACKET_SC_DELETE_CHARACTER 를 브로드캐스팅하고, 서버에서 삭제할 수 있도록 함
 
+        //=====================================================================================================================================
+        // 1. dfPACKET_SC_ATTACK3 을 브로드캐스팅
+        //=====================================================================================================================================
+        PACKET_SC_ATTACK3 packetAttack3;
+        packetAttack3.direction = session->pPlayer->GetFacingDirection();
+        packetAttack3.playerID = session->uid;
+        session->pPlayer->getPosition(packetAttack3.x, packetAttack3.y);
+        BroadcastPacket(nullptr, &packetAttack3, sizeof(packetAttack3), static_cast<UINT8>(PACKET_TYPE::SC_ATTACK3));
 
-       //=====================================================================================================================================
-       // 1. 공격받을 캐릭터를 검색. 검색에 성공하면 2, 3번 절차 진행
-       //=====================================================================================================================================
+        //=====================================================================================================================================
+        // 2. 공격받을 캐릭터를 검색. 검색에 성공하면 3, 4번 절차 진행
+        //=====================================================================================================================================
 
-       // 내가 바라보는 방향에 따라 공격 범위가 달라짐.
+        // 내가 바라보는 방향에 따라 공격 범위가 달라짐.
         UINT16 left, right, top, bottom;
         UINT16 posX, posY;
         session->pPlayer->getPosition(posX, posY);
@@ -834,15 +842,6 @@ void processReceivedPacket(SESSION* session, PACKET_TYPE pt, void* pData)
             if (posX >= left && posX <= right &&
                 posY >= top && posY <= bottom)
             {
-                //=====================================================================================================================================
-                // 2. dfPACKET_SC_ATTACK1 을 브로드캐스팅
-                //=====================================================================================================================================
-                PACKET_SC_ATTACK3 packetAttack3;
-                packetAttack3.direction = session->pPlayer->GetFacingDirection();
-                packetAttack3.playerID = session->uid;
-                session->pPlayer->getPosition(packetAttack3.x, packetAttack3.y);
-                BroadcastPacket(nullptr, &packetAttack3, sizeof(packetAttack3), static_cast<UINT8>(PACKET_TYPE::SC_ATTACK3));
-
                 //=====================================================================================================================================
                 // 3. dfPACKET_SC_DAMAGE 를 브로드캐스팅
                 //=====================================================================================================================================
