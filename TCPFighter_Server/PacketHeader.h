@@ -1,7 +1,5 @@
 #pragma once
 
-#pragma pack(1)
-
 #include "PacketDefine.h"
 
 #define MAX_PACKET_SIZE 10
@@ -31,6 +29,9 @@ enum class PACKET_TYPE : BYTE
 
    END
 };
+
+
+#pragma pack(push, 1) // 1바이트 정렬
 
 //===================================================
 // 패킷 헤더
@@ -154,3 +155,5 @@ typedef struct _tagPACKET_CS_ATTACK3 {
     UINT16 x;
     UINT16 y;
 }PACKET_CS_ATTACK3;
+
+#pragma pack(pop) // 저장된 정렬 상태로 복원

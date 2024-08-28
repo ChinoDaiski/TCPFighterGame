@@ -49,16 +49,21 @@ void CPlayer::SetDirection(int _direction)
 {
     m_direction = _direction;
 
-    // 위쪽이랑 아래쪽 움직일 때는 바뀌지 않음
-    if (m_direction == dfPACKET_MOVE_DIR_UU || m_direction == dfPACKET_MOVE_DIR_DD)
-        ;
-    // 이외의 방향으로 움직일 때 마지막으로 바라보고 있는 방향 바꿈
-    else if (m_direction == dfPACKET_MOVE_DIR_LL || m_direction == dfPACKET_MOVE_DIR_LU || m_direction == dfPACKET_MOVE_DIR_LD)
+    switch (m_direction)
     {
-        m_facingDirection = dfPACKET_MOVE_DIR_LL;
-    }
-    else
+    case dfPACKET_MOVE_DIR_RR:
+    case dfPACKET_MOVE_DIR_RU:
+    case dfPACKET_MOVE_DIR_RD:
         m_facingDirection = dfPACKET_MOVE_DIR_RR;
+        break;
+
+    case dfPACKET_MOVE_DIR_LL:
+    case dfPACKET_MOVE_DIR_LU:
+    case dfPACKET_MOVE_DIR_LD:
+        m_facingDirection = dfPACKET_MOVE_DIR_LL;
+    default:
+        break;
+    }
 }
 
 void CPlayer::Damaged(int _hp)

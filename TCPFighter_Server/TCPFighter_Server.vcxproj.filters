@@ -42,6 +42,9 @@
     <Filter Include="소스 파일\01. Manager\TimerMgr">
       <UniqueIdentifier>{e0debb53-a0eb-4281-b4f9-e2e4013886e9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\03. Packet\MakePacket">
+      <UniqueIdentifier>{e78a6d42-a7fc-4095-9e05-72e0f043bc3f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -61,6 +64,9 @@
     </ClCompile>
     <ClCompile Include="TimerManager.cpp">
       <Filter>소스 파일\01. Manager\TimerMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="makePacket.cpp">
+      <Filter>소스 파일\03. Packet\MakePacket</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -96,6 +102,9 @@
     </ClInclude>
     <ClInclude Include="TimerManager.h">
       <Filter>소스 파일\01. Manager\TimerMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="makePacket.h">
+      <Filter>소스 파일\03. Packet\MakePacket</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

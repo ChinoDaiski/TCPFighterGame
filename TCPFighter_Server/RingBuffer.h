@@ -1,13 +1,15 @@
 
 #pragma once
 
+#define RINGBUFFER_SIZE 1024
+
 #include <iostream>
 #include <string>
 
 class CRingBuffer {
 public:
     // 생성자: 버퍼 크기를 설정하고 버퍼를 초기화합니다.
-    CRingBuffer(int iBufferSize = 1024)
+    explicit CRingBuffer(int iBufferSize = RINGBUFFER_SIZE)
         : m_iCapacity(iBufferSize), m_iReadPos(0), m_iWritePos(0), m_iSize(0) {
         m_pBuffer = new char[m_iCapacity];
     }
@@ -154,7 +156,7 @@ public:
     }
 
     // 쓰기 위치를 이동시키는 함수 (데이터를 추가)
-    int MoveRear(int iSize) {
+    inline int MoveRear(int iSize) {
         int moveSize = std::min(iSize, GetFreeSize());
         m_iWritePos = GetWrappedIndex(m_iWritePos + moveSize);
         m_iSize += moveSize;
@@ -162,7 +164,7 @@ public:
     }
 
     // 읽기 위치를 이동시키는 함수 (데이터를 제거)
-    int MoveFront(int iSize) {
+    inline int MoveFront(int iSize) {
         int moveSize = std::min(iSize, GetUseSize());
         m_iReadPos = GetWrappedIndex(m_iReadPos + moveSize);
         m_iSize -= moveSize;
