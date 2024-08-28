@@ -964,8 +964,6 @@ void netProc_Send(SESSION* pSession)
 
 void netIOProcess(void)
 {
-    SESSION* pSession;
-
     FD_SET ReadSet;
     FD_SET WriteSet;
 

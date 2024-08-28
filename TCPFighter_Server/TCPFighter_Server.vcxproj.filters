@@ -27,23 +27,26 @@
     <Filter Include="소스 파일\98. Defines">
       <UniqueIdentifier>{fac1a78a-02ee-476e-84c4-c0ac1bac4c04}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\01. Manager\WinSockMgr">
-      <UniqueIdentifier>{9b26c7a9-1768-4eb8-ab5a-38b6eb99250d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="소스 파일\01. Manager\ObjectMgr">
-      <UniqueIdentifier>{3da441a0-9f4e-4a0f-ad09-81303033ca24}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="소스 파일\01. Manager\ObjectMgr\Object">
-      <UniqueIdentifier>{a662cbe2-dbeb-4163-b676-05513fe06b9f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="소스 파일\01. Manager\ObjectMgr\Object\Player">
-      <UniqueIdentifier>{2330dc20-528e-43bc-8788-c941732c349b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="소스 파일\01. Manager\TimerMgr">
-      <UniqueIdentifier>{e0debb53-a0eb-4281-b4f9-e2e4013886e9}</UniqueIdentifier>
-    </Filter>
     <Filter Include="소스 파일\03. Packet\MakePacket">
       <UniqueIdentifier>{e78a6d42-a7fc-4095-9e05-72e0f043bc3f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\01. Manager\02. ObjectMgr">
+      <UniqueIdentifier>{3da441a0-9f4e-4a0f-ad09-81303033ca24}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\01. Manager\02. ObjectMgr\Object">
+      <UniqueIdentifier>{a662cbe2-dbeb-4163-b676-05513fe06b9f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\01. Manager\02. ObjectMgr\Object\Player">
+      <UniqueIdentifier>{2330dc20-528e-43bc-8788-c941732c349b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\01. Manager\00. WinSockMgr">
+      <UniqueIdentifier>{9b26c7a9-1768-4eb8-ab5a-38b6eb99250d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\01. Manager\01. TimerMgr">
+      <UniqueIdentifier>{e0debb53-a0eb-4281-b4f9-e2e4013886e9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\01. Manager\03. LogMgr">
+      <UniqueIdentifier>{f8768c01-d7b9-4290-951e-1abfa8de7425}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -54,16 +57,10 @@
       <Filter>소스 파일\00. Main</Filter>
     </ClCompile>
     <ClCompile Include="Player.cpp">
-      <Filter>소스 파일\01. Manager\ObjectMgr\Object\Player</Filter>
+      <Filter>소스 파일\01. Manager\02. ObjectMgr\Object\Player</Filter>
     </ClCompile>
     <ClCompile Include="Object.cpp">
-      <Filter>소스 파일\01. Manager\ObjectMgr\Object</Filter>
-    </ClCompile>
-    <ClCompile Include="ObjectManager.cpp">
-      <Filter>소스 파일\01. Manager\ObjectMgr</Filter>
-    </ClCompile>
-    <ClCompile Include="TimerManager.cpp">
-      <Filter>소스 파일\01. Manager\TimerMgr</Filter>
+      <Filter>소스 파일\01. Manager\02. ObjectMgr\Object</Filter>
     </ClCompile>
     <ClCompile Include="makePacket.cpp">
       <Filter>소스 파일\03. Packet\MakePacket</Filter>
@@ -71,7 +68,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="WinSockManager.h">
-      <Filter>소스 파일\01. Manager\WinSockMgr</Filter>
+      <Filter>소스 파일\01. Manager\00. WinSockMgr</Filter>
     </ClInclude>
     <ClInclude Include="pch.h">
       <Filter>소스 파일\99. pch</Filter>
@@ -92,19 +89,22 @@
       <Filter>소스 파일\98. Defines</Filter>
     </ClInclude>
     <ClInclude Include="ObjectManager.h">
-      <Filter>소스 파일\01. Manager\ObjectMgr</Filter>
+      <Filter>소스 파일\01. Manager\02. ObjectMgr</Filter>
     </ClInclude>
     <ClInclude Include="Object.h">
-      <Filter>소스 파일\01. Manager\ObjectMgr\Object</Filter>
+      <Filter>소스 파일\01. Manager\02. ObjectMgr\Object</Filter>
     </ClInclude>
     <ClInclude Include="Player.h">
-      <Filter>소스 파일\01. Manager\ObjectMgr\Object\Player</Filter>
+      <Filter>소스 파일\01. Manager\02. ObjectMgr\Object\Player</Filter>
     </ClInclude>
     <ClInclude Include="TimerManager.h">
-      <Filter>소스 파일\01. Manager\TimerMgr</Filter>
+      <Filter>소스 파일\01. Manager\01. TimerMgr</Filter>
     </ClInclude>
     <ClInclude Include="makePacket.h">
       <Filter>소스 파일\03. Packet\MakePacket</Filter>
+    </ClInclude>
+    <ClInclude Include="LogManager.h">
+      <Filter>소스 파일\01. Manager\03. LogMgr</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

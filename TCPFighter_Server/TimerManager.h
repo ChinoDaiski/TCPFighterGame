@@ -5,6 +5,14 @@
 class CTimerManager : public SingletonBase<CTimerManager>
 {
 public:
+	explicit CTimerManager() noexcept {}
+	~CTimerManager() noexcept {}
+
+	// 복사 생성자와 대입 연산자를 삭제하여 복사 방지
+	CTimerManager(const CTimerManager&) = delete;
+	CTimerManager& operator=(const CTimerManager&) = delete;
+
+public:
 	// 목표 프레임. 왠만하면 1000의 약수로 설정할 것.
 	void InitTimer(DWORD _targetFPS)
 	{

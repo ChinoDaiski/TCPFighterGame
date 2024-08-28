@@ -17,12 +17,13 @@ enum class PROTOCOL_TYPE
 template <typename SessionType>
 class CWinSockManager : public SingletonBase<CWinSockManager<SessionType>> {
 private:
-    // 생성자는 protected로 설정하여 외부에서 인스턴스를 생성할 수 없게 함
     friend class SingletonBase<CWinSockManager<SessionType>>;
 
 public:
     explicit CWinSockManager() noexcept;
-    ~CWinSockManager() noexcept;  // 복사 생성자와 대입 연산자를 삭제하여 복사 방지
+    ~CWinSockManager() noexcept;
+    
+    // 복사 생성자와 대입 연산자를 삭제하여 복사 방지
     CWinSockManager(const CWinSockManager&) = delete;
     CWinSockManager& operator=(const CWinSockManager&) = delete;
 
