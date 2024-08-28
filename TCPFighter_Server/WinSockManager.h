@@ -46,7 +46,6 @@ public:
     constexpr SOCKET GetListenSocket(void) { return m_listenSocket; }
 
 private:
-    std::list<SessionType*> m_clientList; // 서버에 접속한 세션들에 대한 정보
     SOCKET m_listenSocket;                // listen 소켓
 };
 
@@ -224,11 +223,6 @@ UINT16 CWinSockManager<SessionType>::GetPort(const UINT16& port) noexcept
 template<typename SessionType>
 void CWinSockManager<SessionType>::Cleanup() noexcept
 {
-    for (SessionType* session : m_clientList) {
-        delete session;
-    }
-    m_clientList.clear();
-
     if (m_listenSocket != INVALID_SOCKET) {
         closesocket(m_listenSocket);
         m_listenSocket = INVALID_SOCKET;

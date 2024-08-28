@@ -24,6 +24,7 @@ public:
     void SetHp(int _hp) { m_hp = _hp; }
     void SetDirection(int _direction);
     void Damaged(int _hp);
+    void SetSpeed(UINT8 speedX, UINT8 speedY);
 
 public:
     void SetFlag(UINT8 flag, bool bOnOff);
@@ -37,7 +38,7 @@ private:
     UINT8 m_hp;          // 체력
     UINT8 m_direction;   // 방향
     UINT8 m_facingDirection;    // 캐릭터가 바라보고 있는 방향
-    UINT8 m_speedX = 3;
-    UINT8 m_speedY = 2;
+    UINT8 m_speedX;
+    UINT8 m_speedY;
     UINT8* m_pFlagField;  // 행동 관련 flagField;
 };
