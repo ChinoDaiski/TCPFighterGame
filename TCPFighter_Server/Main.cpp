@@ -858,6 +858,14 @@ void netProc_Accept()
         mpCreateOtherCharacter(&header, &packetCreateOtherCharacter, client->uid, client->pPlayer->GetDirection(), posX, posY, client->pPlayer->GetHp());
 
         UnicastPacket(Session, &header, &packetCreateOtherCharacter);
+
+        // 움직이고 있는 상황이라면
+        if (client->pPlayer->isBitSet(FLAG_MOVING))
+        {
+            PACKET_SC_MOVE_START packetSCMoveStart;
+            mpMoveStart(&header, &packetSCMoveStart, client->uid, client->pPlayer->GetDirection(), posX, posY);
+            UnicastPacket(Session, &header, &packetSCMoveStart);
+        }
     }
 
     // 데이터를 보내는 중에 삭제될 수 도 있으니 살아있는 여부 검사. 원래 있어서는 안되지만 sendQ가 가득찼을 경우 에러가 발생할 수 있음. 혹시 모르니 검사
