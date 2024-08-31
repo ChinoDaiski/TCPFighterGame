@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Object.h"
+#include "Session.h"
 
 #define FLAG_MOVING         0x01
 #define FLAG_DEAD           0x02
@@ -10,9 +11,10 @@ public:
     explicit CPlayer(UINT16 _x, UINT16 _y, UINT8 _direction, UINT8 _hp) noexcept;
     virtual ~CPlayer();
 
-    // 기타 멤버 함수 선언
-    virtual void Update(float deltaTime) override;
+public:
     virtual void Move(void) override;
+    virtual void Update(float deltaTime) override;
+    virtual void LateUpdate(float deltaTime) override;
 
 public:
     // Getter 함수
@@ -32,7 +34,7 @@ public:
     bool isBitSet(UINT8 flag);
 
 public:
-    void SetFlagField(UINT8* pField);
+    void SetFlagField(UINT8 pField);
 
 private:
     UINT8 m_hp;          // 체력
@@ -40,5 +42,5 @@ private:
     UINT8 m_facingDirection;    // 캐릭터가 바라보고 있는 방향
     UINT8 m_speedX;
     UINT8 m_speedY;
-    UINT8* m_pFlagField;  // 행동 관련 flagField;
+    UINT8 m_FlagField;  // 행동 관련 FlagField;
 };

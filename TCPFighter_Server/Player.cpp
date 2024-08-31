@@ -14,7 +14,7 @@ int dir[8][2] = {
 };
 
 CPlayer::CPlayer(UINT16 _x, UINT16 _y, UINT8 _direction, UINT8 _hp) noexcept
-	: CObject{ _x, _y }, m_hp{ _hp }, m_direction{ _direction }
+    : CObject{ _x, _y }, m_hp{ _hp }, m_direction{ _direction }, m_FlagField{ 0 }, m_speedX{ 1 }, m_speedY{ 1 }
 {
 }
 
@@ -23,6 +23,15 @@ CPlayer::~CPlayer()
 }
 
 void CPlayer::Update(float deltaTime)
+{
+    if (isBitSet(FLAG_MOVING))
+    {
+        Move();
+        std::cout << m_pSession->uid << " / " << m_x << ", " << m_y << "\n";
+    }
+}
+
+void CPlayer::LateUpdate(float deltaTime)
 {
 }
 
@@ -73,7 +82,10 @@ void CPlayer::SetDirection(int _direction)
 void CPlayer::Damaged(int _hp)
 { 
     if (m_hp - _hp <= 0)
+    {
         m_hp = 0;
+        m_bDead = true;
+    }
     else
         m_hp -= _hp;
 }
@@ -88,25 +100,25 @@ void CPlayer::SetFlag(UINT8 flag, bool bOnOff)
 {
     if (bOnOff)
     {
-        (*m_pFlagField) |= flag;
+        m_FlagField |= flag;
     }
     else
     {
-        (*m_pFlagField) &= ~flag;
+        m_FlagField &= ~flag;
     }
 }
 
 void CPlayer::ToggleFlag(UINT8 flag)
 {
-    (*m_pFlagField) ^= flag;
+    m_FlagField ^= flag;
 }
 
 bool CPlayer::isBitSet(UINT8 flag)
 {
-    return ((*m_pFlagField) & flag) != 0;
+    return (m_FlagField & flag) != 0;
 }
 
-void CPlayer::SetFlagField(UINT8* pField)
+void CPlayer::SetFlagField(UINT8 pField)
 {
-    m_pFlagField = pField;
+    m_FlagField = pField;
 }

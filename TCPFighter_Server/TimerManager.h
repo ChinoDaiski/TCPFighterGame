@@ -14,65 +14,28 @@ public:
 
 public:
 	// 목표 프레임. 왠만하면 1000의 약수로 설정할 것.
-	void InitTimer(DWORD _targetFPS)
+	void InitServerFrame(DWORD _targetFPS)
 	{
-		timeBeginPeriod(1);
+		timeBeginPeriod(1);							// 타이머 정밀도(해상도) 1ms 설정
 
-		targetFPS = _targetFPS;
-		targetFrameTime = 1000 / targetFPS;
+		m_targetFPS = _targetFPS;					// 목표 초당 프레임
+		m_targetFrameTime = 1000 / m_targetFPS;     // 1 프레임에 주어지는 시간
+		m_currentServerTime = timeGetTime();		// 전역 서버 시간 설정
 	}
 
-	void SetStartServerTime(void)
+	// 프레임 체크하는 함수
+	bool isStartFrame(void)
 	{
-		startServerTime = timeGetTime();
-		fps = 0;
-		startFrameTime = startServerTime;
-	}
+		if (timeGetTime() < (m_currentServerTime + m_targetFrameTime))
+			return false;
+		
+		m_currentServerTime += m_targetFrameTime;
 
-	// 프레임 시작할 때 호출
-	void StartFrame(void)
-	{
-		//currentTick = timeGetTime();
-	}
-
-	// 프레임 끝날 때 호출
-	void EndFrame(void)
-	{
-		// 매 프레임 마다 타겟 프레임 만큼 서버의 시간 증가.
-		// 이 시간이 진짜 서버가 흐른 시간과 동일해야 함.
-		startServerTime += targetFrameTime;
-
-		// targetFrameTime 만큼 Sleep()
-		int SleepTime = (startServerTime - timeGetTime());
-		if (SleepTime <= 0)
-		{
-			// 스킵
-			//std::cout << "스킵!\n";
-		}
-		else
-		{
-			Sleep(SleepTime);
-		}
-
-		fps++;
-
-		// 1초가 지났다면
-		DWORD passingTime = startServerTime - startFrameTime;
-		if (passingTime >= 1000)
-		{
-			// 필요하면 여기서 fps 측정
-			//std::cout << fps << " / " << passingTime << "\n";
-
-			startFrameTime += passingTime;
-
-			fps = 0;
-		}
+		return true;
 	}
 
 private:
-	DWORD targetFPS;			// 1초당 목표 프레임
-	DWORD targetFrameTime;		// 1초당 주어지는 시간 -> 1000 / targetFPS
-	DWORD startFrameTime;		// 시작
-	DWORD fps;					// 현재 서버 fps
-	DWORD startServerTime;		// 서버 로직이 시작될 때 초기화되고, 이후에 프레임이 지날 때 마다 targetFrameTime 만큼 더함.
+	DWORD m_targetFPS;
+	DWORD m_targetFrameTime;
+	DWORD m_currentServerTime;
 };
