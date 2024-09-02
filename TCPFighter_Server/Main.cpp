@@ -946,24 +946,14 @@ void netProc_Accept()
         client->pPlayer->getPosition(posX, posY);
         mpCreateOtherCharacter(&header, &Packet, client->uid, client->pPlayer->GetDirection(), posX, posY, client->pPlayer->GetHp());
 
-<<<<<<< HEAD
         UnicastPacket(Session, &header, &Packet);
-=======
-        UnicastPacket(Session, &header, &packetCreateOtherCharacter);
->>>>>>> dbb4ec5c609351501513ec895bee66c559f07699
 
         // 움직이고 있는 상황이라면
         if (client->pPlayer->isBitSet(FLAG_MOVING))
         {
-<<<<<<< HEAD
             Packet.Clear();
             mpMoveStart(&header, &Packet, client->uid, client->pPlayer->GetDirection(), posX, posY);
             UnicastPacket(Session, &header, &Packet);
-=======
-            PACKET_SC_MOVE_START packetSCMoveStart;
-            mpMoveStart(&header, &packetSCMoveStart, client->uid, client->pPlayer->GetDirection(), posX, posY);
-            UnicastPacket(Session, &header, &packetSCMoveStart);
->>>>>>> dbb4ec5c609351501513ec895bee66c559f07699
         }
     }
 
