@@ -1,108 +1,109 @@
 #include "pch.h"
 #include "makePacket.h"
+#include "Packet.h"
 
-void mpCreateMyCharacter(PACKET_HEADER* pHeader, PACKET_SC_CREATE_MY_CHARACTER* pPacket, UINT32 playerID, UINT8 direction, UINT16 posX, UINT16 posY, UINT8 hp)
+void mpCreateMyCharacter(PACKET_HEADER* pHeader, CPacket *pPacket, UINT32 playerID, UINT8 direction, UINT16 posX, UINT16 posY, UINT8 hp)
 {
+    *pPacket << playerID;
+    *pPacket << direction;
+    *pPacket << posX;
+    *pPacket << posY;
+    *pPacket << hp;
+
     pHeader->byCode = dfNETWORK_PACKET_CODE;
-    pHeader->bySize = sizeof(PACKET_SC_CREATE_MY_CHARACTER);
+    pHeader->bySize = pPacket->GetDataSize();
     pHeader->byType = dfPACKET_SC_CREATE_MY_CHARACTER;
-
-    pPacket->playerID = playerID;
-    pPacket->direction = direction;
-    pPacket->x = posX;
-    pPacket->y = posY;
-    pPacket->hp = hp;
 }
 
-void mpCreateOtherCharacter(PACKET_HEADER* pHeader, PACKET_SC_CREATE_OTHER_CHARACTER* pPacket, UINT32 playerID, UINT8 direction, UINT16 posX, UINT16 posY, UINT8 hp)
+void mpCreateOtherCharacter(PACKET_HEADER* pHeader, CPacket* pPacket, UINT32 playerID, UINT8 direction, UINT16 posX, UINT16 posY, UINT8 hp)
 {
+    *pPacket << playerID;
+    *pPacket << direction;
+    *pPacket << posX;
+    *pPacket << posY;
+    *pPacket << hp;
+
     pHeader->byCode = dfNETWORK_PACKET_CODE;
-    pHeader->bySize = sizeof(PACKET_SC_CREATE_OTHER_CHARACTER);
+    pHeader->bySize = pPacket->GetDataSize();
     pHeader->byType = dfPACKET_SC_CREATE_OTHER_CHARACTER;
-
-    pPacket->playerID = playerID;
-    pPacket->direction = direction;
-    pPacket->x = posX;
-    pPacket->y = posY;
-    pPacket->hp = hp;
 }
 
-void mpDeleteCharacter(PACKET_HEADER* pHeader, PACKET_SC_DELETE_CHARACTER* pPacket, UINT32 playerID)
+void mpDeleteCharacter(PACKET_HEADER* pHeader, CPacket* pPacket, UINT32 playerID)
 {
+    *pPacket << playerID;
+
     pHeader->byCode = dfNETWORK_PACKET_CODE;
-    pHeader->bySize = sizeof(PACKET_SC_DELETE_CHARACTER);
+    pHeader->bySize = pPacket->GetDataSize();
     pHeader->byType = dfPACKET_SC_DELETE_CHARACTER;
-
-    pPacket->playerID = playerID;
 }
 
-void mpMoveStart(PACKET_HEADER* pHeader, PACKET_SC_MOVE_START* pPacket, UINT32 playerID, UINT8 direction, UINT16 posX, UINT16 posY)
+void mpMoveStart(PACKET_HEADER* pHeader, CPacket* pPacket, UINT32 playerID, UINT8 direction, UINT16 posX, UINT16 posY)
 {
+    *pPacket << playerID;
+    *pPacket << direction;
+    *pPacket << posX;
+    *pPacket << posY;
+
     pHeader->byCode = dfNETWORK_PACKET_CODE;
-    pHeader->bySize = sizeof(PACKET_SC_MOVE_START);
+    pHeader->bySize = pPacket->GetDataSize();
     pHeader->byType = dfPACKET_SC_MOVE_START;
-
-    pPacket->playerID = playerID;
-    pPacket->direction = direction;
-    pPacket->x = posX;
-    pPacket->y = posY;
 }
 
-void mpMoveStop(PACKET_HEADER* pHeader, PACKET_SC_MOVE_STOP* pPacket, UINT32 playerID, UINT8 direction, UINT16 posX, UINT16 posY)
+void mpMoveStop(PACKET_HEADER* pHeader, CPacket* pPacket, UINT32 playerID, UINT8 direction, UINT16 posX, UINT16 posY)
 {
+    *pPacket << playerID;
+    *pPacket << direction;
+    *pPacket << posX;
+    *pPacket << posY;
+
     pHeader->byCode = dfNETWORK_PACKET_CODE;
-    pHeader->bySize = sizeof(PACKET_SC_MOVE_STOP);
+    pHeader->bySize = pPacket->GetDataSize();
     pHeader->byType = dfPACKET_SC_MOVE_STOP;
-
-    pPacket->playerID = playerID;
-    pPacket->direction = direction;
-    pPacket->x = posX;
-    pPacket->y = posY;
 }
 
-void mpAttack1(PACKET_HEADER* pHeader, PACKET_SC_ATTACK1* pPacket, UINT32 playerID, UINT8 direction, UINT16 posX, UINT16 posY)
+void mpAttack1(PACKET_HEADER* pHeader, CPacket* pPacket, UINT32 playerID, UINT8 direction, UINT16 posX, UINT16 posY)
 {
+    *pPacket << playerID;
+    *pPacket << direction;
+    *pPacket << posX;
+    *pPacket << posY;
+
     pHeader->byCode = dfNETWORK_PACKET_CODE;
-    pHeader->bySize = sizeof(PACKET_SC_ATTACK1);
+    pHeader->bySize = pPacket->GetDataSize();
     pHeader->byType = dfPACKET_SC_ATTACK1;
-
-    pPacket->playerID = playerID;
-    pPacket->direction = direction;
-    pPacket->x = posX;
-    pPacket->y = posY;
 }
 
-void mpAttack2(PACKET_HEADER* pHeader, PACKET_SC_ATTACK2* pPacket, UINT32 playerID, UINT8 direction, UINT16 posX, UINT16 posY)
+void mpAttack2(PACKET_HEADER* pHeader, CPacket* pPacket, UINT32 playerID, UINT8 direction, UINT16 posX, UINT16 posY)
 {
+    *pPacket << playerID;
+    *pPacket << direction;
+    *pPacket << posX;
+    *pPacket << posY;
+
     pHeader->byCode = dfNETWORK_PACKET_CODE;
-    pHeader->bySize = sizeof(PACKET_SC_ATTACK2);
+    pHeader->bySize = pPacket->GetDataSize();
     pHeader->byType = dfPACKET_SC_ATTACK2;
-
-    pPacket->playerID = playerID;
-    pPacket->direction = direction;
-    pPacket->x = posX;
-    pPacket->y = posY;
 }
 
-void mpAttack3(PACKET_HEADER* pHeader, PACKET_SC_ATTACK3* pPacket, UINT32 playerID, UINT8 direction, UINT16 posX, UINT16 posY)
+void mpAttack3(PACKET_HEADER* pHeader, CPacket* pPacket, UINT32 playerID, UINT8 direction, UINT16 posX, UINT16 posY)
 {
+    *pPacket << playerID;
+    *pPacket << direction;
+    *pPacket << posX;
+    *pPacket << posY;
+
     pHeader->byCode = dfNETWORK_PACKET_CODE;
-    pHeader->bySize = sizeof(PACKET_SC_ATTACK3);
+    pHeader->bySize = pPacket->GetDataSize();
     pHeader->byType = dfPACKET_SC_ATTACK3;
-
-    pPacket->playerID = playerID;
-    pPacket->direction = direction;
-    pPacket->x = posX;
-    pPacket->y = posY;
 }
 
-void mpDamage(PACKET_HEADER* pHeader, PACKET_SC_DAMAGE* pPacket, UINT32 attackPlayerID, UINT32 damagedPlayerID, UINT8 damagedHP)
+void mpDamage(PACKET_HEADER* pHeader, CPacket* pPacket, UINT32 attackPlayerID, UINT32 damagedPlayerID, UINT8 damagedHP)
 {
-    pHeader->byCode = dfNETWORK_PACKET_CODE;
-    pHeader->bySize = sizeof(PACKET_SC_DAMAGE);
-    pHeader->byType = dfPACKET_SC_DAMAGE;
+    *pPacket << attackPlayerID;
+    *pPacket << damagedPlayerID;
+    *pPacket << damagedHP;
 
-    pPacket->attackPlayerID = attackPlayerID;
-    pPacket->damagedPlayerID = damagedPlayerID;
-    pPacket->damagedHP = damagedHP;
+    pHeader->byCode = dfNETWORK_PACKET_CODE;
+    pHeader->bySize = pPacket->GetDataSize();
+    pHeader->byType = dfPACKET_SC_DAMAGE;
 }

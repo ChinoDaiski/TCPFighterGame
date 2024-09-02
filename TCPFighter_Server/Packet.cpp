@@ -1,13 +1,7 @@
 
+#include "pch.h"
 #include "Packet.h"
 #include <iostream>
-
-bool Debugging(void)
-{
-	DebugBreak();
-
-	return true;
-}
 
 CPacket::CPacket(int iBufferSize)
 {
@@ -24,7 +18,9 @@ CPacket::~CPacket()
 
 void CPacket::Clear(void)
 {
-	(m_iFront & m_iRear) ? true : Debugging();
+	if (m_iFront != m_iRear)
+		DebugBreak();
+
 	m_iFront = m_iRear = 0;
 }
 

@@ -87,7 +87,7 @@ public:
 			return *this;
 
 		// 데이터 복사 및 포인터 이동
-		std::memcpy(m_chpBuffer + m_iRear, (void*)&value, sizeof(T));
+		*reinterpret_cast<T*>(m_chpBuffer + m_iRear) = value;
 		MoveWritePos(sizeof(T));
 
 		return *this;
@@ -112,12 +112,12 @@ public:
 	//////////////////////////////////////////////////////////////////////////
 
 	template<typename T>
-	CPacket& operator>>(const T& value) {
+	CPacket& operator>>(T& value) {
 		if (!std::is_arithmetic<T>::value)
 			return *this;
 
 		// 데이터 복사 및 포인터 이동
-		std::memcpy((void*)&value, m_chpBuffer + m_iFront, sizeof(T));
+		value = *reinterpret_cast<T*>(m_chpBuffer + m_iFront);
 		MoveReadPos(sizeof(T));
 
 		return *this;
