@@ -143,6 +143,7 @@
   <ItemGroup>
     <ClCompile Include="makePacket.cpp" />
     <ClCompile Include="Object.cpp" />
+    <ClCompile Include="Packet.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -155,6 +156,7 @@
   <ItemGroup>
     <ClInclude Include="LogManager.h" />
     <ClInclude Include="makePacket.h" />
+    <ClInclude Include="Packet.h" />
     <ClInclude Include="TimerManager.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="ObjectManager.h" />

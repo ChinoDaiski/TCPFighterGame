@@ -155,13 +155,14 @@ void Update(void)
         // 비활성화 되었다면
         if (!(*it)->isAlive)
         {
+            /*
             // sendQ가 비워졌는지 확인.
             if ((*it)->sendQ.GetUseSize() != 0)
             {
                 // 만약 비워지지 않았다면 의도하지 않은 결과.
                 DebugBreak();
             }
-
+            */
             // 제거
             closesocket((*it)->sock);
 
@@ -196,9 +197,11 @@ void Update(void)
                     // 방향에 따라 다른 위치 움직임
                     client->pPlayer->Move();
 
+                    /*
                     UINT16 x, y;
                     client->pPlayer->getPosition(x, y);
                     std::cout << client->uid << " / " << x << ", " << y << "\n";
+                    */
                 }
             }
         }
