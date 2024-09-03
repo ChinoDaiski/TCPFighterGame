@@ -58,6 +58,12 @@ int CPacket::GetData(char* chpDest, int iSize)
 
 int CPacket::PutData(char* chpSrc, int iSrcSize)
 {
+	if ((m_iRear + iSrcSize) > m_iBufferSize)
+	{
+		// 패킷의 최대 사이즈 보다 더 많은 값이 들어갈 예정.
+		DebugBreak();
+	}
+
 	std::memcpy(m_chpBuffer + m_iRear, chpSrc, iSrcSize);
 	MoveWritePos(iSrcSize);
 

@@ -27,9 +27,6 @@
     <Filter Include="소스 파일\98. Defines">
       <UniqueIdentifier>{fac1a78a-02ee-476e-84c4-c0ac1bac4c04}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\03. Packet\MakePacket">
-      <UniqueIdentifier>{e78a6d42-a7fc-4095-9e05-72e0f043bc3f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="소스 파일\01. Manager\02. ObjectMgr">
       <UniqueIdentifier>{3da441a0-9f4e-4a0f-ad09-81303033ca24}</UniqueIdentifier>
     </Filter>
@@ -48,6 +45,15 @@
     <Filter Include="소스 파일\01. Manager\03. LogMgr">
       <UniqueIdentifier>{f8768c01-d7b9-4290-951e-1abfa8de7425}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\03. Packet\01. MakePacket">
+      <UniqueIdentifier>{e78a6d42-a7fc-4095-9e05-72e0f043bc3f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\03. Packet\02. Defines">
+      <UniqueIdentifier>{9bb446de-28d8-4c83-bbbd-74cbca4e6063}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\03. Packet\00. Packet">
+      <UniqueIdentifier>{215ff4ef-f28b-4b7e-b67e-c4a739e4fcfb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -63,7 +69,10 @@
       <Filter>소스 파일\01. Manager\02. ObjectMgr\Object</Filter>
     </ClCompile>
     <ClCompile Include="makePacket.cpp">
-      <Filter>소스 파일\03. Packet\MakePacket</Filter>
+      <Filter>소스 파일\03. Packet\01. MakePacket</Filter>
+    </ClCompile>
+    <ClCompile Include="Packet.cpp">
+      <Filter>소스 파일\03. Packet\00. Packet</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -72,12 +81,6 @@
     </ClInclude>
     <ClInclude Include="pch.h">
       <Filter>소스 파일\99. pch</Filter>
-    </ClInclude>
-    <ClInclude Include="PacketHeader.h">
-      <Filter>소스 파일\03. Packet</Filter>
-    </ClInclude>
-    <ClInclude Include="PacketDefine.h">
-      <Filter>소스 파일\03. Packet</Filter>
     </ClInclude>
     <ClInclude Include="RingBuffer.h">
       <Filter>소스 파일\02. RingBuffer</Filter>
@@ -101,10 +104,19 @@
       <Filter>소스 파일\01. Manager\01. TimerMgr</Filter>
     </ClInclude>
     <ClInclude Include="makePacket.h">
-      <Filter>소스 파일\03. Packet\MakePacket</Filter>
+      <Filter>소스 파일\03. Packet\01. MakePacket</Filter>
     </ClInclude>
     <ClInclude Include="LogManager.h">
       <Filter>소스 파일\01. Manager\03. LogMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="PacketDefine.h">
+      <Filter>소스 파일\03. Packet\02. Defines</Filter>
+    </ClInclude>
+    <ClInclude Include="PacketHeader.h">
+      <Filter>소스 파일\03. Packet\02. Defines</Filter>
+    </ClInclude>
+    <ClInclude Include="Packet.h">
+      <Filter>소스 파일\03. Packet\00. Packet</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
