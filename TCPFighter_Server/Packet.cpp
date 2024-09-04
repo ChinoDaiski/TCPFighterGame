@@ -18,7 +18,7 @@ CPacket::~CPacket()
 
 void CPacket::Clear(void)
 {
-	if (m_iFront != m_iRear)
+	if (m_iFront > m_iRear)
 		DebugBreak();
 
 	m_iFront = m_iRear = 0;
