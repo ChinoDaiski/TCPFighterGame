@@ -77,11 +77,13 @@ public:
 	//////////////////////////////////////////////////////////////////////////
 	template<typename T>
 	CPacket& operator<<(const T& value) {
+#ifdef _DEBUG
+		// 패킷에 할당되어 있는 최대 사이즈 보다 더 많은 값이 들어가는지 검사
 		if (m_iRear + sizeof(T) > m_iBufferSize)
 		{
-			// 패킷의 최대 사이즈 보다 더 많은 값이 들어갈 예정.
 			DebugBreak();
 		}
+#endif
 
 		if (!std::is_arithmetic<T>::value)
 			return *this;
@@ -113,6 +115,14 @@ public:
 
 	template<typename T>
 	CPacket& operator>>(T& value) {
+#ifdef _DEBUG
+		// 패킷에 들어 있는 크기보다 더 많은 크기를 빼려고 시도
+		if (m_iFront + sizeof(T) > m_iBufferSize)
+		{
+			DebugBreak();
+		}
+#endif
+
 		if (!std::is_arithmetic<T>::value)
 			return *this;
 
