@@ -2,6 +2,7 @@
 
 #define NOMINMAX
 #include <iostream>
+#include <stdexcept>
 
 #include <WinSock2.h>
 #include <WS2tcpip.h>

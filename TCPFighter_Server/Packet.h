@@ -18,7 +18,7 @@ public:
 	// Return:
 	//////////////////////////////////////////////////////////////////////////
 	explicit CPacket(int iBufferSize = static_cast<UINT8>(en_PACKET::eBUFFER_DEFAULT));
-	~CPacket();
+	virtual ~CPacket();
 
 	//////////////////////////////////////////////////////////////////////////
 	// 패킷 청소.
@@ -77,13 +77,11 @@ public:
 	//////////////////////////////////////////////////////////////////////////
 	template<typename T>
 	CPacket& operator<<(const T& value) {
-#ifdef _DEBUG
 		// 패킷에 할당되어 있는 최대 사이즈 보다 더 많은 값이 들어가는지 검사
 		if ((m_iRear + sizeof(T)) > m_iBufferSize)
 		{
-			DebugBreak();
+			throw std::runtime_error("패킷에 할당되어 있는 최대 사이즈 보다 더 많은 값이 들어가는지 검사");
 		}
-#endif
 
 		if (!std::is_arithmetic<T>::value)
 			return *this;
@@ -115,16 +113,17 @@ public:
 
 	template<typename T>
 	CPacket& operator>>(T& value) {
-#ifdef _DEBUG
 		// 넣어진 값 이상으로 뺴려고 시도
 		if ((m_iFront + sizeof(T)) > m_iRear)
 		{
-			DebugBreak();
+			throw std::runtime_error("넣어진 값 이상으로 뺴려고 시도");
 		}
-#endif
 
-		if (!std::is_arithmetic<T>::value)
+		if constexpr (!std::is_arithmetic<T>::value)
+		{
+			DebugBreak();
 			return *this;
+		}
 
 		// 데이터 복사 및 포인터 이동
 		value = *reinterpret_cast<T*>(m_chpBuffer + m_iFront);
@@ -166,8 +165,8 @@ public:
 	int		PutData(char* chpSrc, int iSrcSize);
 
 
-private:
-	char* m_chpBuffer;      // 링버퍼의 데이터 저장 배열
+protected:
+	char* m_chpBuffer;      // 데이터 저장 배열
 	int m_iBufferSize;      // 버퍼의 전체 용량
 	int m_iFront;           // 현재 읽기 위치 (front)
 	int m_iRear;            // 현재 쓰기 위치 (rear)
