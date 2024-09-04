@@ -75,6 +75,7 @@ int main()
 void Update(void)
 {
     CNetIOManager& NetIOManager = CNetIOManager::getInstance();
+    CSessionManager& SessionManger = CSessionManager::getInstance();
     CObjectManager& ObjectManager = CObjectManager::getInstance();
 
     auto& acceptSessionQueue = NetIOManager.GetAcceptSessionQueue();
@@ -153,6 +154,8 @@ void Update(void)
 
     ObjectManager.Update(0.f);
     ObjectManager.LateUpdate(0.f);
+
+    SessionManger.Update();
 
 
     //// 비활성화된 클라이언트를 리스트에서 제거

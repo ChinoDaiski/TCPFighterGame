@@ -6,6 +6,8 @@
 #include "Session.h"
 #include "SessionManager.h"
 
+#include "ObjectManager.h"
+
 CNetIOManager::CNetIOManager() noexcept
 {
 }

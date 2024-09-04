@@ -30,9 +30,10 @@ void CObjectManager::LateUpdate(float deltatime)
     while (it != m_ObjectList.end())
     {
         // 오브젝트가 비활성화 되었다면
-        if ((*it)->isDead())
+        if ((*it)->isDead() || (*it)->m_pSession->isAlive == false)
         {
-            CSessionManager::NotifyClientDisconnected((*it)->m_pSession); // 세션이 죽었음을 알림
+            if ((*it)->m_pSession->isAlive != false)
+                CSessionManager::NotifyClientDisconnected((*it)->m_pSession); // 세션이 죽었음을 알림
             
             delete (*it);                   // 플레이어 삭제
             it = m_ObjectList.erase(it);    // 리스트에서 iter 삭제

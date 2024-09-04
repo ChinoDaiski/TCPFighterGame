@@ -13,6 +13,26 @@ CSessionManager::~CSessionManager() noexcept
 {
 }
 
+void CSessionManager::Update(void)
+{
+    auto it = m_UserSessionMap.begin();
+    while (it != m_UserSessionMap.end())
+    {
+        SESSION* pSession = it->second;
+
+        // 비활성화 되었다면
+        if (!pSession->isAlive)
+        {
+            it = m_UserSessionMap.erase(it);
+        }
+        // 활성 중이라면
+        else
+        {
+            ++it;
+        }
+    }
+}
+
 void CSessionManager::BroadcastData(SESSION* excludeSession, void* pData, UINT8 dataSize)
 {
     for (auto& Session : m_UserSessionMap)
@@ -86,8 +106,6 @@ void CSessionManager::NotifyClientDisconnected(SESSION* disconnectedSession)
 
     // 생성된 패킷 연결이 끊긴 세션을 제외하고 브로드캐스트
     BroadcastPacket(disconnectedSession, &header, &packetDelete);
-
-    CSessionManager::DeleteSession(disconnectedSession->uid);
 }
 
 void CSessionManager::DeleteSession(UINT16 uid)
