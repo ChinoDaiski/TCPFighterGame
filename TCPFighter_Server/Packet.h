@@ -79,7 +79,7 @@ public:
 	CPacket& operator<<(const T& value) {
 #ifdef _DEBUG
 		// 패킷에 할당되어 있는 최대 사이즈 보다 더 많은 값이 들어가는지 검사
-		if (m_iRear + sizeof(T) > m_iBufferSize)
+		if ((m_iRear + sizeof(T)) > m_iBufferSize)
 		{
 			DebugBreak();
 		}
@@ -116,8 +116,8 @@ public:
 	template<typename T>
 	CPacket& operator>>(T& value) {
 #ifdef _DEBUG
-		// 패킷에 들어 있는 크기보다 더 많은 크기를 빼려고 시도
-		if (m_iFront + sizeof(T) > m_iBufferSize)
+		// 넣어진 값 이상으로 뺴려고 시도
+		if ((m_iFront + sizeof(T)) > m_iRear)
 		{
 			DebugBreak();
 		}
