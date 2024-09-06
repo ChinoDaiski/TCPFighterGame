@@ -33,7 +33,7 @@
 #define SERVERPORT 5000
 
 
-bool g_bShutdown = true;
+bool g_bShutdown = false;
 std::list<SESSION*> g_clientList;
 int g_id;
 SOCKET g_listenSocket;              // listen 소켓
@@ -45,6 +45,8 @@ void netProc_Accept();
 void netProc_Send(SESSION* pSession);
 
 void Update(void);
+
+void DeleteRPCFiles(void);
 
 DWORD g_targetFPS;			    // 1초당 목표 프레임
 DWORD g_targetFrame;		    // 1초당 주어지는 시간 -> 1000 / targetFPS
@@ -111,31 +113,8 @@ int main()
 
     // 현재 서버에 있는 정보 안전하게 DB등에 저장
 
-
-    std::filesystem::path currentPath = std::filesystem::current_path();
-
-    std::string fileName;
-    std::filesystem::path fullPath;
-
-    fileName = "Proxy.h";
-    fullPath = currentPath / fileName;
-    std::remove(fullPath.string().c_str());
-
-    fileName = "Proxy.cpp";
-    fullPath = currentPath / fileName;
-    std::remove(fullPath.string().c_str());
-
-    fileName = "Stub.h";
-    fullPath = currentPath / fileName;
-    std::remove(fullPath.string().c_str());
-
-    fileName = "Stub.cpp";
-    fullPath = currentPath / fileName;
-    std::remove(fullPath.string().c_str());
-
-    fileName = "Common.h";
-    fullPath = currentPath / fileName;
-    std::remove(fullPath.string().c_str());
+    // RPC로 만들어진 파일들 삭제
+    DeleteRPCFiles();
 }
 
 // 메인 로직
@@ -546,4 +525,32 @@ void netIOProcess(void)
         std::cout << "Error : select(), " << WSAGetLastError() << "\n";
         DebugBreak();
     }
+}
+
+void DeleteRPCFiles(void)
+{
+    std::filesystem::path currentPath = std::filesystem::current_path();
+
+    std::string fileName;
+    std::filesystem::path fullPath;
+
+    fileName = "Proxy.h";
+    fullPath = currentPath / fileName;
+    std::remove(fullPath.string().c_str());
+
+    fileName = "Proxy.cpp";
+    fullPath = currentPath / fileName;
+    std::remove(fullPath.string().c_str());
+
+    fileName = "Stub.h";
+    fullPath = currentPath / fileName;
+    std::remove(fullPath.string().c_str());
+
+    fileName = "Stub.cpp";
+    fullPath = currentPath / fileName;
+    std::remove(fullPath.string().c_str());
+
+    fileName = "Common.h";
+    fullPath = currentPath / fileName;
+    std::remove(fullPath.string().c_str());
 }
