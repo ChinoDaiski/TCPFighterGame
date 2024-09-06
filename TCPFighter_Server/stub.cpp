@@ -1,28 +1,28 @@
 #include "pch.h"
-#include "stub.h"
+#include "Stub.h"
 #include "Packet.h"
 
-bool Stub::CS_MoveStart(SESSION* pSession, UINT8 direction, UINT16 x, UINT16 y)
+bool Stub::CS_MOVE_START(SESSION* pSession, UINT8 Direction, UINT16 X, UINT16 Y)
 {
     return true;
 }
 
-bool Stub::CS_MoveStop(SESSION* pSession, UINT8 direction, UINT16 x, UINT16 y)
+bool Stub::CS_MOVE_STOP(SESSION* pSession, UINT8 Direction, UINT16 X, UINT16 Y)
 {
     return true;
 }
 
-bool Stub::CS_ATTACK1(SESSION* pSession, UINT8 direction, UINT16 x, UINT16 y)
+bool Stub::CS_ATTACK1(SESSION* pSession, UINT8 Direction, UINT16 X, UINT16 Y)
 {
     return true;
 }
 
-bool Stub::CS_ATTACK2(SESSION* pSession, UINT8 direction, UINT16 x, UINT16 y)
+bool Stub::CS_ATTACK2(SESSION* pSession, UINT8 Direction, UINT16 X, UINT16 Y)
 {
     return true;
 }
 
-bool Stub::CS_ATTACK3(SESSION* pSession, UINT8 direction, UINT16 x, UINT16 y)
+bool Stub::CS_ATTACK3(SESSION* pSession, UINT8 Direction, UINT16 X, UINT16 Y)
 {
     return true;
 }
@@ -33,72 +33,71 @@ bool Stub::PacketProc(SESSION* pSession, PACKET_TYPE packetType, CPacket* pPacke
     {
     case PACKET_TYPE::CS_MOVE_START:
     {
-        UINT8 direction;
-        UINT16 x;
-        UINT16 y;
+        UINT8 Direction;
+        UINT16 X;
+        UINT16 Y;
 
-        *pPacket >> direction;
-        *pPacket >> x;
-        *pPacket >> y;
+        *pPacket >> Direction;
+        *pPacket >> X;
+        *pPacket >> Y;
 
-        CS_MoveStart(pSession, direction, x, y);
+        CS_MOVE_START(pSession, Direction, X, Y);
     }
     break;
     case PACKET_TYPE::CS_MOVE_STOP:
     {
-        UINT8 direction;
-        UINT16 x;
-        UINT16 y;
+        UINT8 Direction;
+        UINT16 X;
+        UINT16 Y;
 
-        *pPacket >> direction;
-        *pPacket >> x;
-        *pPacket >> y;
+        *pPacket >> Direction;
+        *pPacket >> X;
+        *pPacket >> Y;
 
-        CS_MoveStop(pSession, direction, x, y);
+        CS_MOVE_STOP(pSession, Direction, X, Y);
     }
     break;
     case PACKET_TYPE::CS_ATTACK1:
     {
-        UINT8 direction;
-        UINT16 x;
-        UINT16 y;
+        UINT8 Direction;
+        UINT16 X;
+        UINT16 Y;
 
-        *pPacket >> direction;
-        *pPacket >> x;
-        *pPacket >> y;
+        *pPacket >> Direction;
+        *pPacket >> X;
+        *pPacket >> Y;
 
-        CS_ATTACK1(pSession, direction, x, y);
+        CS_ATTACK1(pSession, Direction, X, Y);
     }
     break;
     case PACKET_TYPE::CS_ATTACK2:
     {
-        UINT8 direction;
-        UINT16 x;
-        UINT16 y;
+        UINT8 Direction;
+        UINT16 X;
+        UINT16 Y;
 
-        *pPacket >> direction;
-        *pPacket >> x;
-        *pPacket >> y;
+        *pPacket >> Direction;
+        *pPacket >> X;
+        *pPacket >> Y;
 
-        CS_ATTACK2(pSession, direction, x, y);
+        CS_ATTACK2(pSession, Direction, X, Y);
     }
     break;
     case PACKET_TYPE::CS_ATTACK3:
     {
-        UINT8 direction;
-        UINT16 x;
-        UINT16 y;
+        UINT8 Direction;
+        UINT16 X;
+        UINT16 Y;
 
-        *pPacket >> direction;
-        *pPacket >> x;
-        *pPacket >> y;
+        *pPacket >> Direction;
+        *pPacket >> X;
+        *pPacket >> Y;
 
-        CS_ATTACK3(pSession, direction, x, y);
+        CS_ATTACK3(pSession, Direction, X, Y);
     }
     break;
     default:
         break;
     }
-
     return true;
 }

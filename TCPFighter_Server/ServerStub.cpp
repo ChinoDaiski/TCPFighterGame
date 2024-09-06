@@ -9,7 +9,7 @@
 
 extern Proxy serverProxy;
 
-bool ServerStub::CS_MoveStart(SESSION* pSession, UINT8 direction, UINT16 x, UINT16 y)
+bool ServerStub::CS_MOVE_START(SESSION* pSession, UINT8 direction, UINT16 x, UINT16 y)
 {
     // 메시지 수신 로그 확인
     // ==========================================================================================================
@@ -46,7 +46,7 @@ bool ServerStub::CS_MoveStart(SESSION* pSession, UINT8 direction, UINT16 x, UINT
     // ==========================================================================================================
     // 당사자를 제외한, 현재 접속중인 모든 사용자에게 패킷을 뿌림.
     // ==========================================================================================================
-    serverProxy.SC_MoveStart_ForAll(pSession, pSession->uid, pSession->pPlayer->GetDirection(), x, y);
+    serverProxy.SC_MOVE_START_FOR_All(pSession, pSession->uid, pSession->pPlayer->GetDirection(), x, y);
 
 
     //=====================================================================================================================================
@@ -57,7 +57,7 @@ bool ServerStub::CS_MoveStart(SESSION* pSession, UINT8 direction, UINT16 x, UINT
     return true;
 }
 
-bool ServerStub::CS_MoveStop(SESSION* pSession, UINT8 direction, UINT16 x, UINT16 y)
+bool ServerStub::CS_MOVE_STOP(SESSION* pSession, UINT8 direction, UINT16 x, UINT16 y)
 {
     // 현재 선택된 클라이언트가 서버에게 움직임을 멈출 것이라 요청
     // 1. 받은 데이터 처리
@@ -73,7 +73,7 @@ bool ServerStub::CS_MoveStop(SESSION* pSession, UINT8 direction, UINT16 x, UINT1
     //=====================================================================================================================================
     // 2. PACKET_SC_MOVE_STOP 를 브로드캐스팅
     //=====================================================================================================================================
-    serverProxy.SC_MoveStop_ForAll(pSession, pSession->uid, pSession->pPlayer->GetDirection(), x, y);
+    serverProxy.SC_MOVE_STOP_FOR_All(pSession, pSession->uid, pSession->pPlayer->GetDirection(), x, y);
 
     //=====================================================================================================================================
     // 3. 서버 내에서 이동 연산 멈춤을 알림
@@ -97,7 +97,7 @@ bool ServerStub::CS_ATTACK1(SESSION* pSession, UINT8 direction, UINT16 x, UINT16
     //=====================================================================================================================================
     pSession->pPlayer->SetPosition(x, y);
 
-    serverProxy.SC_Attack1_ForAll(pSession, pSession->uid, pSession->pPlayer->GetDirection(), x, y);
+    serverProxy.SC_ATTACK1_FOR_All(pSession, pSession->uid, pSession->pPlayer->GetDirection(), x, y);
 
     //=====================================================================================================================================
     // 2. 공격받을 캐릭터를 검색. 검색에 성공하면 3, 4번 절차 진행
@@ -141,7 +141,7 @@ bool ServerStub::CS_ATTACK1(SESSION* pSession, UINT8 direction, UINT16 x, UINT16
             // 1명만 데미지를 입도록 함
             client->pPlayer->Damaged(dfATTACK1_DAMAGE);
 
-            serverProxy.SC_Damage_ForAll(pSession, pSession->uid, client->uid, client->pPlayer->GetHp());
+            serverProxy.SC_DAMAGE_FOR_All(nullptr, pSession->uid, client->uid, client->pPlayer->GetHp());
 
             /*
             //=====================================================================================================================================
@@ -181,7 +181,7 @@ bool ServerStub::CS_ATTACK2(SESSION* pSession, UINT8 direction, UINT16 x, UINT16
     //=====================================================================================================================================
     pSession->pPlayer->SetPosition(x, y);
 
-    serverProxy.SC_Attack2_ForAll(pSession, pSession->uid, pSession->pPlayer->GetDirection(), x, y);
+    serverProxy.SC_ATTACK2_FOR_All(pSession, pSession->uid, pSession->pPlayer->GetDirection(), x, y);
 
     //=====================================================================================================================================
     // 2. 공격받을 캐릭터를 검색. 검색에 성공하면 3, 4번 절차 진행
@@ -225,7 +225,7 @@ bool ServerStub::CS_ATTACK2(SESSION* pSession, UINT8 direction, UINT16 x, UINT16
             // 1명만 데미지를 입도록 함
             client->pPlayer->Damaged(dfATTACK2_DAMAGE);
 
-            serverProxy.SC_Damage_ForAll(pSession, pSession->uid, client->uid, client->pPlayer->GetHp());
+            serverProxy.SC_DAMAGE_FOR_All(nullptr, pSession->uid, client->uid, client->pPlayer->GetHp());
 
             /*
             //=====================================================================================================================================
@@ -265,7 +265,7 @@ bool ServerStub::CS_ATTACK3(SESSION* pSession, UINT8 direction, UINT16 x, UINT16
     //=====================================================================================================================================
     pSession->pPlayer->SetPosition(x, y);
 
-    serverProxy.SC_Attack3_ForAll(pSession, pSession->uid, pSession->pPlayer->GetDirection(), x, y);
+    serverProxy.SC_ATTACK3_FOR_All(pSession, pSession->uid, pSession->pPlayer->GetDirection(), x, y);
 
     //=====================================================================================================================================
     // 2. 공격받을 캐릭터를 검색. 검색에 성공하면 3, 4번 절차 진행
@@ -309,7 +309,7 @@ bool ServerStub::CS_ATTACK3(SESSION* pSession, UINT8 direction, UINT16 x, UINT16
             // 1명만 데미지를 입도록 함
             client->pPlayer->Damaged(dfATTACK3_DAMAGE);
 
-            serverProxy.SC_Damage_ForAll(pSession, pSession->uid, client->uid, client->pPlayer->GetHp());
+            serverProxy.SC_DAMAGE_FOR_All(nullptr, pSession->uid, client->uid, client->pPlayer->GetHp());
 
             /*
             //=====================================================================================================================================

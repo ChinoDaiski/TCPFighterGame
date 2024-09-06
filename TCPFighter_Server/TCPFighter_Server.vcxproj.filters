@@ -69,11 +69,14 @@
     <Filter Include="소스 파일\95. Session">
       <UniqueIdentifier>{bca0e829-a016-4362-8d92-5520f5f25d4a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\97. RPC\02. ServerInterface">
+    <Filter Include="소스 파일\97. RPC\04. Convertor">
+      <UniqueIdentifier>{67c99e23-be5d-4aa1-a692-c8d494c992dc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\97. RPC\03. ServerInterface">
       <UniqueIdentifier>{7f0fbc0e-6750-4a91-a305-c04334d58176}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\97. RPC\03. Convertor">
-      <UniqueIdentifier>{67c99e23-be5d-4aa1-a692-c8d494c992dc}</UniqueIdentifier>
+    <Filter Include="소스 파일\97. RPC\02. Common">
+      <UniqueIdentifier>{077c2ef8-d72b-4968-b8a0-8c5777eabb5a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -108,7 +111,7 @@
       <Filter>소스 파일\96. StackWalker\CustomException</Filter>
     </ClCompile>
     <ClCompile Include="ServerStub.cpp">
-      <Filter>소스 파일\97. RPC\02. ServerInterface</Filter>
+      <Filter>소스 파일\97. RPC\03. ServerInterface</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -167,10 +170,13 @@
       <Filter>소스 파일\96. StackWalker\CustomException</Filter>
     </ClInclude>
     <ClInclude Include="ServerStub.h">
-      <Filter>소스 파일\97. RPC\02. ServerInterface</Filter>
+      <Filter>소스 파일\97. RPC\03. ServerInterface</Filter>
     </ClInclude>
     <ClInclude Include="RPC_Define.h">
-      <Filter>소스 파일\97. RPC\03. Convertor</Filter>
+      <Filter>소스 파일\97. RPC\04. Convertor</Filter>
+    </ClInclude>
+    <ClInclude Include="Common.h">
+      <Filter>소스 파일\97. RPC\02. Common</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

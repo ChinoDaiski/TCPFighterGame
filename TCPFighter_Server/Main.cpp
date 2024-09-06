@@ -136,7 +136,7 @@ void Update(void)
             */
 
             // 삭제될 캐릭터 정보 브로드캐스트
-            serverProxy.SC_DeleteCharacter_ForAll((*it), (*it)->uid);
+            serverProxy.SC_DELETE_CHARACTER_FOR_All((*it), (*it)->uid);
 
             // 제거
             closesocket((*it)->sock);
@@ -319,12 +319,12 @@ void netProc_Accept()
     //=====================================================================================================================================
     UINT16 posX, posY;
     Session->pPlayer->getPosition(posX, posY);
-    serverProxy.SC_CreateMyCharacter_ForSingle(Session, Session->uid, Session->pPlayer->GetDirection(), posX, posY, Session->pPlayer->GetHp());
+    serverProxy.SC_CREATE_MY_CHARACTER_FOR_SINGLE(Session, Session->uid, Session->pPlayer->GetDirection(), posX, posY, Session->pPlayer->GetHp());
 
     //=====================================================================================================================================
     // 2. PACKET_SC_CREATE_OTHER_CHARACTER 에 연결된 세션의 정보를 담아 브로드캐스트
     //=====================================================================================================================================
-    serverProxy.SC_CreateOtherCharacter_ForAll(Session, Session->uid, Session->pPlayer->GetDirection(), posX, posY, Session->pPlayer->GetHp());
+    serverProxy.SC_CREATE_OTHER_CHARACTER_FOR_All(Session, Session->uid, Session->pPlayer->GetDirection(), posX, posY, Session->pPlayer->GetHp());
 
     //=====================================================================================================================================
     // 3. PACKET_SC_CREATE_OTHER_CHARACTER 에 g_clientList에 있는 모든 캐릭터 정보를 담아 연결된 세션에게 전송
@@ -334,12 +334,12 @@ void netProc_Accept()
     for (const auto& client : g_clientList)
     {
         client->pPlayer->getPosition(posX, posY);
-        serverProxy.SC_CreateOtherCharacter_ForSingle(Session, client->uid, client->pPlayer->GetDirection(), posX, posY, client->pPlayer->GetHp());
+        serverProxy.SC_CREATE_OTHER_CHARACTER_FOR_SINGLE(Session, client->uid, client->pPlayer->GetDirection(), posX, posY, client->pPlayer->GetHp());
 
         // 움직이고 있는 상황이라면
         if (client->pPlayer->isBitSet(FLAG_MOVING))
         {
-            serverProxy.SC_MoveStart_ForSingle(Session, client->uid, client->pPlayer->GetDirection(), posX, posY);
+            serverProxy.SC_MOVE_START_FOR_SINGLE(Session, client->uid, client->pPlayer->GetDirection(), posX, posY);
         }
     }
 
