@@ -20,17 +20,20 @@
 
 #include "Packet.h"
 
-#include "Proxy.h"
+#include "Proxy.cpp"
+#include "Stub.cpp"
+
 #include "ServerStub.h"
 
 
+#include <filesystem>
 
 //#define SERVERIP "192.168.30.16"
 #define SERVERIP "127.0.0.1"
 #define SERVERPORT 5000
 
 
-bool g_bShutdown = false;
+bool g_bShutdown = true;
 std::list<SESSION*> g_clientList;
 int g_id;
 SOCKET g_listenSocket;              // listen 소켓
@@ -107,6 +110,32 @@ int main()
     }
 
     // 현재 서버에 있는 정보 안전하게 DB등에 저장
+
+
+    std::filesystem::path currentPath = std::filesystem::current_path();
+
+    std::string fileName;
+    std::filesystem::path fullPath;
+
+    fileName = "Proxy.h";
+    fullPath = currentPath / fileName;
+    std::remove(fullPath.string().c_str());
+
+    fileName = "Proxy.cpp";
+    fullPath = currentPath / fileName;
+    std::remove(fullPath.string().c_str());
+
+    fileName = "Stub.h";
+    fullPath = currentPath / fileName;
+    std::remove(fullPath.string().c_str());
+
+    fileName = "Stub.cpp";
+    fullPath = currentPath / fileName;
+    std::remove(fullPath.string().c_str());
+
+    fileName = "Common.h";
+    fullPath = currentPath / fileName;
+    std::remove(fullPath.string().c_str());
 }
 
 // 메인 로직
