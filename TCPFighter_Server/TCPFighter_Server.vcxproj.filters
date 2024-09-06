@@ -60,12 +60,6 @@
     <Filter Include="소스 파일\97. RPC\01. Stub">
       <UniqueIdentifier>{9325d0be-1332-4609-87a5-104d1267b28e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\97. RPC\02. ServerProxy">
-      <UniqueIdentifier>{47e1631e-3685-4589-8e53-b9466ccd3097}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="소스 파일\97. RPC\03. ServerStub">
-      <UniqueIdentifier>{7f0fbc0e-6750-4a91-a305-c04334d58176}</UniqueIdentifier>
-    </Filter>
     <Filter Include="소스 파일\96. StackWalker">
       <UniqueIdentifier>{415ecb54-e554-4b5b-b329-691f1799c795}</UniqueIdentifier>
     </Filter>
@@ -77,6 +71,9 @@
     </Filter>
     <Filter Include="소스 파일\97. RPC\04. Convertor">
       <UniqueIdentifier>{67c99e23-be5d-4aa1-a692-c8d494c992dc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\97. RPC\02. ServerInterface">
+      <UniqueIdentifier>{7f0fbc0e-6750-4a91-a305-c04334d58176}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -95,17 +92,14 @@
     <ClCompile Include="Packet.cpp">
       <Filter>소스 파일\03. Packet\00. Packet</Filter>
     </ClCompile>
-    <ClCompile Include="proxy.cpp">
+    <ClCompile Include="Proxy.cpp">
       <Filter>소스 파일\97. RPC\00. Proxy</Filter>
     </ClCompile>
-    <ClCompile Include="stub.cpp">
+    <ClCompile Include="Stub.cpp">
       <Filter>소스 파일\97. RPC\01. Stub</Filter>
     </ClCompile>
     <ClCompile Include="Session.cpp">
       <Filter>소스 파일\95. Session</Filter>
-    </ClCompile>
-    <ClCompile Include="ServerProxy.cpp">
-      <Filter>소스 파일\97. RPC\02. ServerProxy</Filter>
     </ClCompile>
     <ClCompile Include="StackWalker.cpp">
       <Filter>소스 파일\96. StackWalker</Filter>
@@ -114,7 +108,7 @@
       <Filter>소스 파일\96. StackWalker\CustomException</Filter>
     </ClCompile>
     <ClCompile Include="ServerStub.cpp">
-      <Filter>소스 파일\97. RPC\03. ServerStub</Filter>
+      <Filter>소스 파일\97. RPC\02. ServerInterface</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -157,17 +151,14 @@
     <ClInclude Include="Packet.h">
       <Filter>소스 파일\03. Packet\00. Packet</Filter>
     </ClInclude>
-    <ClInclude Include="proxy.h">
+    <ClInclude Include="Proxy.h">
       <Filter>소스 파일\97. RPC\00. Proxy</Filter>
     </ClInclude>
-    <ClInclude Include="stub.h">
+    <ClInclude Include="Stub.h">
       <Filter>소스 파일\97. RPC\01. Stub</Filter>
     </ClInclude>
     <ClInclude Include="Session.h">
       <Filter>소스 파일\95. Session</Filter>
-    </ClInclude>
-    <ClInclude Include="ServerProxy.h">
-      <Filter>소스 파일\97. RPC\02. ServerProxy</Filter>
     </ClInclude>
     <ClInclude Include="StackWalker.h">
       <Filter>소스 파일\96. StackWalker</Filter>
@@ -176,7 +167,10 @@
       <Filter>소스 파일\96. StackWalker\CustomException</Filter>
     </ClInclude>
     <ClInclude Include="ServerStub.h">
-      <Filter>소스 파일\97. RPC\03. ServerStub</Filter>
+      <Filter>소스 파일\97. RPC\02. ServerInterface</Filter>
+    </ClInclude>
+    <ClInclude Include="RPC_Define.h">
+      <Filter>소스 파일\97. RPC\04. Convertor</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

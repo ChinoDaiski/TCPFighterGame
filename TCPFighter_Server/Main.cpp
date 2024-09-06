@@ -20,7 +20,7 @@
 
 #include "Packet.h"
 
-#include "ServerProxy.h"
+#include "Proxy.h"
 #include "ServerStub.h"
 
 
@@ -49,7 +49,7 @@ DWORD g_currentServerTime;		// 서버 로직이 시작될 때 초기화되고, 이후에 프레임이
 
 // 서버 객체에 프록시 등록하기
 ServerStub serverStub;
-ServerProxy serverProxy;
+Proxy serverProxy;
 
 int main()
 {
