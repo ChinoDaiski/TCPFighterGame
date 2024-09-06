@@ -6,7 +6,7 @@
 class ServerStub : public Stub
 {
 public:
-	// Server To Client
+	// Client To Server
 	virtual bool CS_MoveStart(SESSION* pSession, UINT8 direction, UINT16 x, UINT16 y) override;
 	virtual bool CS_MoveStop(SESSION* pSession, UINT8 direction, UINT16 x, UINT16 y) override;
 	virtual bool CS_ATTACK1(SESSION* pSession, UINT8 direction, UINT16 x, UINT16 y) override;

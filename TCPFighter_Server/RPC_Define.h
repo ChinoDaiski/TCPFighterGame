@@ -1,37 +1,6 @@
 #pragma once
 
-/////////////////////////////////////////////////////////////////////
-// www.gamecodi.com						이주행 master@gamecodi.com
-//
-//
-/////////////////////////////////////////////////////////////////////
-/*---------------------------------------------------------------
 
-패킷데이터 정의.
-
-
-자신의 캐릭터에 대한 패킷을 서버에게 보낼 때, 모두 자신이 먼저
-액션을 취함과 동시에 패킷을 서버로 보내주도록 한다.
-
-- 이동 키 입력 시 이동동작을 취함과 동시에 이동 패킷을 보내도록 한다.
-- 공격키 입력 시 공격 동작을 취하면서 패킷을 보낸다.
-- 충돌 처리 및 데미지에 대한 정보는 서버에서 처리 후 통보하게 된다.
-
-
----------------------------------------------------------------*/
-
-//---------------------------------------------------------------
-// 패킷헤더.
-//
-//---------------------------------------------------------------
-/*
-	BYTE	byCode;			// 패킷코드 0x89 고정.
-	BYTE	bySize;			// 패킷 사이즈.
-	BYTE	byType;			// 패킷타입.
-*/
-
-
-#define	dfPACKET_SC_CREATE_MY_CHARACTER			0
 //---------------------------------------------------------------
 // 클라이언트 자신의 캐릭터 할당		Server -> Client
 //
@@ -47,9 +16,16 @@
 //	1	-	HP
 //
 //---------------------------------------------------------------
+#define	dfPACKET_SC_CREATE_MY_CHARACTER			0
+/*
+	UINT32		ID
+	UINT8		Direction
+	UINT16		X
+	UINT16		Y
+	UINT8		HP
+*/
 
 
-#define	dfPACKET_SC_CREATE_OTHER_CHARACTER		1
 //---------------------------------------------------------------
 // 다른 클라이언트의 캐릭터 생성 패킷		Server -> Client
 //
@@ -64,9 +40,18 @@
 //	1	-	HP
 //
 //---------------------------------------------------------------
+#define	dfPACKET_SC_CREATE_OTHER_CHARACTER		1
+/*
+	UINT32		ID
+	UINT8		Direction
+	UINT16		X
+	UINT16		Y
+	UINT8		HP
+*/
 
 
-#define	dfPACKET_SC_DELETE_CHARACTER			2
+
+
 //---------------------------------------------------------------
 // 캐릭터 삭제 패킷						Server -> Client
 //
@@ -75,10 +60,13 @@
 //	4	-	ID
 //
 //---------------------------------------------------------------
+#define	dfPACKET_SC_DELETE_CHARACTER			2
+/*
+	UINT32		ID
+*/
 
 
 
-#define	dfPACKET_CS_MOVE_START					10
 //---------------------------------------------------------------
 // 캐릭터 이동시작 패킷						Client -> Server
 //
@@ -93,19 +81,16 @@
 //	2	-	Y
 //
 //---------------------------------------------------------------
-#define dfPACKET_MOVE_DIR_LL					0
-#define dfPACKET_MOVE_DIR_LU					1
-#define dfPACKET_MOVE_DIR_UU					2
-#define dfPACKET_MOVE_DIR_RU					3
-#define dfPACKET_MOVE_DIR_RR					4
-#define dfPACKET_MOVE_DIR_RD					5
-#define dfPACKET_MOVE_DIR_DD					6
-#define dfPACKET_MOVE_DIR_LD					7
+#define	dfPACKET_CS_MOVE_START					10
+/*
+	UINT8		Direction
+	UINT16		X
+	UINT16		Y
+*/
 
 
 
 
-#define	dfPACKET_SC_MOVE_START					11
 //---------------------------------------------------------------
 // 캐릭터 이동시작 패킷						Server -> Client
 //
@@ -121,11 +106,16 @@
 //	2	-	Y
 //
 //---------------------------------------------------------------
+#define	dfPACKET_SC_MOVE_START					11
+/*
+	UINT32		ID
+	UINT8		Direction
+	UINT16		X
+	UINT16		Y
+*/
 
 
 
-
-#define	dfPACKET_CS_MOVE_STOP					12
 //---------------------------------------------------------------
 // 캐릭터 이동중지 패킷						Client -> Server
 //
@@ -137,9 +127,16 @@
 //	2	-	Y
 //
 //---------------------------------------------------------------
+#define	dfPACKET_CS_MOVE_STOP					12
+/*
+	UINT8		Direction
+	UINT16		X
+	UINT16		Y
+*/
 
 
-#define	dfPACKET_SC_MOVE_STOP					13
+
+
 //---------------------------------------------------------------
 // 캐릭터 이동중지 패킷						Server -> Client
 //
@@ -152,10 +149,17 @@
 //	2	-	Y
 //
 //---------------------------------------------------------------
+#define	dfPACKET_SC_MOVE_STOP					13
+/*
+	UINT32		ID
+	UINT8		Direction
+	UINT16		X
+	UINT16		Y
+*/
 
 
 
-#define	dfPACKET_CS_ATTACK1						20
+
 //---------------------------------------------------------------
 // 캐릭터 공격 패킷							Client -> Server
 //
@@ -169,8 +173,16 @@
 //	2	-	Y	
 //
 //---------------------------------------------------------------
+#define	dfPACKET_CS_ATTACK1						20
+/*
+	UINT8		Direction
+	UINT16		X
+	UINT16		Y
+*/
 
-#define	dfPACKET_SC_ATTACK1						21
+
+
+
 //---------------------------------------------------------------
 // 캐릭터 공격 패킷							Server -> Client
 //
@@ -183,10 +195,16 @@
 //	2	-	Y
 //
 //---------------------------------------------------------------
+#define	dfPACKET_SC_ATTACK1						21
+/*
+	UINT32		ID
+	UINT8		Direction
+	UINT16		X
+	UINT16		Y
+*/
 
 
 
-#define	dfPACKET_CS_ATTACK2						22
 //---------------------------------------------------------------
 // 캐릭터 공격 패킷							Client -> Server
 //
@@ -200,8 +218,17 @@
 //	2	-	Y
 //
 //---------------------------------------------------------------
+#define	dfPACKET_CS_ATTACK2						22
+/*
+	UINT8		Direction
+	UINT16		X
+	UINT16		Y
+*/
 
-#define	dfPACKET_SC_ATTACK2						23
+
+
+
+
 //---------------------------------------------------------------
 // 캐릭터 공격 패킷							Server -> Client
 //
@@ -214,8 +241,17 @@
 //	2	-	Y
 //
 //---------------------------------------------------------------
+#define	dfPACKET_SC_ATTACK2						23
+/*
+	UINT32		ID
+	UINT8		Direction
+	UINT16		X
+	UINT16		Y
+*/
 
-#define	dfPACKET_CS_ATTACK3						24
+
+
+
 //---------------------------------------------------------------
 // 캐릭터 공격 패킷							Client -> Server
 //
@@ -229,8 +265,14 @@
 //	2	-	Y
 //
 //---------------------------------------------------------------
+#define	dfPACKET_CS_ATTACK3						24
+/*
+	UINT8		Direction
+	UINT16		X
+	UINT16		Y
+*/
 
-#define	dfPACKET_SC_ATTACK3						25
+
 //---------------------------------------------------------------
 // 캐릭터 공격 패킷							Server -> Client
 //
@@ -243,12 +285,16 @@
 //	2	-	Y
 //
 //---------------------------------------------------------------
+#define	dfPACKET_SC_ATTACK3						25
+/*
+	UINT32		ID
+	UINT8		Direction
+	UINT16		X
+	UINT16		Y
+*/
 
 
 
-
-
-#define	dfPACKET_SC_DAMAGE						30
 //---------------------------------------------------------------
 // 캐릭터 데미지 패킷							Server -> Client
 //
@@ -259,7 +305,12 @@
 //	1	-	DamageHP	( 피해자 HP )
 //
 //---------------------------------------------------------------
-
+#define	dfPACKET_SC_DAMAGE						30
+/*
+	UINT32		AttackID
+	UINT32		DamageID
+	UINT8		DamageHP
+*/
 
 
 
