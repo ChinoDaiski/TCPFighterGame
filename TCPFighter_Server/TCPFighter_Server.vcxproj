@@ -141,7 +141,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="makePacket.cpp" />
+    <ClCompile Include="CustomException.cpp" />
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="Packet.cpp" />
     <ClCompile Include="Player.cpp" />
@@ -152,11 +152,23 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="proxy.cpp" />
+    <ClCompile Include="ServerProxy.cpp" />
+    <ClCompile Include="ServerStub.cpp" />
+    <ClCompile Include="Session.cpp" />
+    <ClCompile Include="StackWalker.cpp" />
+    <ClCompile Include="stub.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CustomException.h" />
     <ClInclude Include="LogManager.h" />
-    <ClInclude Include="makePacket.h" />
     <ClInclude Include="Packet.h" />
+    <ClInclude Include="proxy.h" />
+    <ClInclude Include="ServerProxy.h" />
+    <ClInclude Include="ServerStub.h" />
+    <ClInclude Include="Session.h" />
+    <ClInclude Include="StackWalker.h" />
+    <ClInclude Include="stub.h" />
     <ClInclude Include="TimerManager.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="ObjectManager.h" />

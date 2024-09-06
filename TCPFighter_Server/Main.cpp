@@ -20,7 +20,8 @@
 
 #include "Packet.h"
 
-
+#include "ServerProxy.h"
+#include "ServerStub.h"
 
 
 
@@ -29,51 +30,10 @@
 #define SERVERPORT 5000
 
 
-typedef struct _tagSession
-{
-    // 삭제 여부를 판별하는 변수
-    bool isAlive;
-
-    // 세션 info - 소켓, ip, port
-    USHORT port;
-    char IP[16];
-    SOCKET sock;
-    CRingBuffer recvQ;  // 수신용 링버퍼
-    CRingBuffer sendQ;  // 송신용 링버퍼
-
-    // 유저 INFO
-    UINT16 uid; // ID
-    UINT8 flagField;
-    CPlayer* pPlayer;
-}SESSION;
-
-std::list<SESSION*> g_clientList;    // 서버에 접속한 세션들에 대한 정보
+bool g_bShutdown = false;
+std::list<SESSION*> g_clientList;
+int g_id;
 SOCKET g_listenSocket;              // listen 소켓
-
-int g_id;   // 세션들에 id를 부여하기 위한 기준. 이 값을 1씩 증가시키면서 id를 부여한다. 
-bool g_bShutdown = false;   // 메인 루프가 끝났는지 여부를 결정하기 위한 변수. true면 서버의 루프를 종료한다.
-
-
-
-//==========================================================================================================================================
-// Broadcast
-//==========================================================================================================================================
-void BroadcastData(SESSION* excludeSession, PACKET_HEADER* pPacket, UINT8 dataSize);
-void BroadcastData(SESSION* excludeSession, CPacket* pPacket, UINT8 dataSize);
-void BroadcastPacket(SESSION* excludeSession, PACKET_HEADER* pHeader, CPacket* pPacket);
-
-//==========================================================================================================================================
-// Unicast
-//==========================================================================================================================================
-void UnicastData(SESSION* includeSession, PACKET_HEADER* pPacket, UINT8 dataSize);
-void UnicastData(SESSION* includeSession, CPacket* pPacket, UINT8 dataSize);
-void UnicastPacket(SESSION* excludeSession, PACKET_HEADER* pHeader, CPacket* pPacket);
-
-SESSION* createSession(SOCKET ClientSocket, SOCKADDR_IN ClientAddr, UINT32 id, UINT16 posX, UINT16 posY, UINT8 hp, UINT8 direction);
-void NotifyClientDisconnected(SESSION* disconnectedSession);
-
-
-
 
 void netIOProcess(void);
 
@@ -81,19 +41,15 @@ void netProc_Recv(SESSION* pSession);
 void netProc_Accept();
 void netProc_Send(SESSION* pSession);
 
-bool PacketProc(SESSION* pSession, PACKET_TYPE packetType, CPacket* pPacket);
-
-bool netPacketProc_MoveStart(SESSION* pSession, CPacket* pPacket);
-bool netPacketProc_MoveStop(SESSION* pSession, CPacket* pPacket);
-bool netPacketProc_ATTACK1(SESSION* pSession, CPacket* pPacket);
-bool netPacketProc_ATTACK2(SESSION* pSession, CPacket* pPacket);
-bool netPacketProc_ATTACK3(SESSION* pSession, CPacket* pPacket);
-
 void Update(void);
 
 DWORD g_targetFPS;			    // 1초당 목표 프레임
 DWORD g_targetFrame;		    // 1초당 주어지는 시간 -> 1000 / targetFPS
 DWORD g_currentServerTime;		// 서버 로직이 시작될 때 초기화되고, 이후에 프레임이 지날 때 마다 targetFrameTime 만큼 더함.
+
+// 서버 객체에 프록시 등록하기
+ServerStub serverStub;
+ServerProxy serverProxy;
 
 int main()
 {
@@ -111,7 +67,7 @@ int main()
     //=====================================================================================================================================
     // 서버 시간 설정
     //=====================================================================================================================================
-    timeBeginPeriod(1);                     // 타이머 정밀도(해상도) 1ms 설정
+    timeBeginPeriod(1);                     // 타이머 정밀도(해상도) 1ms 설
 
     g_targetFPS = 50;                       // 목표 초당 프레임
     g_targetFrame = 1000 / g_targetFPS;     // 1 프레임에 주어지는 시간
@@ -143,7 +99,7 @@ int main()
             // 게임 로직 업데이트
             Update();
         }
-        catch (const std::exception&)
+        catch (const std::exception& e)
         {
             // 여기서 stackWalk 적용 예정
             g_bShutdown = true;
@@ -178,6 +134,10 @@ void Update(void)
                 DebugBreak();
             }
             */
+
+            // 삭제될 캐릭터 정보 브로드캐스트
+            serverProxy.SC_DeleteCharacter_ForAll((*it), (*it)->uid);
+
             // 제거
             closesocket((*it)->sock);
 
@@ -223,577 +183,6 @@ void Update(void)
     }
 }
 
-void BroadcastData(SESSION* excludeSession, PACKET_HEADER* pPacket, UINT8 dataSize)
-{
-    for (auto& client : g_clientList)
-    {
-        // 해당 세션이 alive가 아니거나 제외할 세션이라면 넘어가기
-        if (!client->isAlive || excludeSession == client)
-            continue;
-
-        // 메시지 전파, 세션의 sendQ에 데이터를 삽입
-        int retVal = client->sendQ.Enqueue((const char*)pPacket, dataSize);
-
-        if (retVal != dataSize)
-        {
-            NotifyClientDisconnected(client);
-
-            // 이런 일은 있어선 안되지만 혹시 모르니 검사, enqueue에서 문제가 난 것은 링버퍼의 크기가 가득찼다는 의미이므로, resize할지 말지는 오류 생길시 가서 테스트하면서 진행
-            int error = WSAGetLastError();
-            std::cout << "Error : BroadcastData(), It might be full of sendQ" << error << "\n";
-            DebugBreak();
-        }
-    }
-}
-
-// 클라이언트에게 데이터를 브로드캐스트하는 함수
-void BroadcastData(SESSION* excludeSession, CPacket* pPacket, UINT8 dataSize)
-{
-    for (auto& client : g_clientList)
-    {
-        // 해당 세션이 alive가 아니거나 제외할 세션이라면 넘어가기
-        if (!client->isAlive || excludeSession == client)
-            continue;
-
-        // 메시지 전파, 세션의 sendQ에 데이터를 삽입
-        int retVal = client->sendQ.Enqueue((const char*)pPacket->GetBufferPtr(), dataSize);
-
-        if (retVal != dataSize)
-        {
-            NotifyClientDisconnected(client);
-
-            // 이런 일은 있어선 안되지만 혹시 모르니 검사, enqueue에서 문제가 난 것은 링버퍼의 크기가 가득찼다는 의미이므로, resize할지 말지는 오류 생길시 가서 테스트하면서 진행
-            int error = WSAGetLastError();
-            std::cout << "Error : BroadcastData(), It might be full of sendQ" << error << "\n";
-            DebugBreak();
-        }
-    }
-}
-
-void BroadcastPacket(SESSION* excludeSession, PACKET_HEADER* pHeader, CPacket* pPacket)
-{
-    BroadcastData(excludeSession, pHeader, sizeof(PACKET_HEADER));
-    BroadcastData(excludeSession, pPacket, pHeader->bySize);
-
-    pPacket->MoveReadPos(pHeader->bySize);
-    pPacket->Clear();
-}
-
-// 클라이언트 연결이 끊어진 경우에 호출되는 함수
-void NotifyClientDisconnected(SESSION* disconnectedSession)
-{
-    // 만약 이미 죽었다면 NotifyClientDisconnected가 호출되었던 상태이므로 중복인 상태. 체크할 것.
-    if (disconnectedSession->isAlive == false)
-    {
-        DebugBreak();
-    }
-
-    disconnectedSession->isAlive = false;
-
-    // PACKET_SC_DELETE_CHARACTER 패킷 생성
-    PACKET_HEADER header;
-    CPacket Packet;
-    mpDeleteCharacter(&header, &Packet, disconnectedSession->uid);
-
-    // 생성된 패킷 연결이 끊긴 세션을 제외하고 브로드캐스트
-    BroadcastPacket(disconnectedSession, &header, &Packet);
-}
-
-void UnicastData(SESSION* includeSession, PACKET_HEADER* pPacket, UINT8 dataSize)
-{
-    if (!includeSession->isAlive)
-        return;
-
-    // 세션의 sendQ에 데이터를 삽입
-    int retVal = includeSession->sendQ.Enqueue((const char*)pPacket, dataSize);
-
-    if (retVal != dataSize)
-    {
-        NotifyClientDisconnected(includeSession);
-
-        // 이런 일은 있어선 안되지만 혹시 모르니 검사, enqueue에서 문제가 난 것은 링버퍼의 크기가 가득찼다는 의미이므로, resize할지 말지는 오류 생길시 가서 테스트하면서 진행
-        int error = WSAGetLastError();
-        std::cout << "Error : UnicastData(), It might be full of sendQ" << error << "\n";
-        DebugBreak();
-    }
-}
-
-// 인자로 받은 세션들에게 데이터 전송을 시도하는 함수
-void UnicastData(SESSION* includeSession, CPacket* pPacket, UINT8 dataSize)
-{
-    if (!includeSession->isAlive)
-        return;
-
-    // 세션의 sendQ에 데이터를 삽입
-    int retVal = includeSession->sendQ.Enqueue((const char*)pPacket->GetBufferPtr(), dataSize);
-
-    if (retVal != dataSize)
-    {
-        NotifyClientDisconnected(includeSession);
-
-        // 이런 일은 있어선 안되지만 혹시 모르니 검사, enqueue에서 문제가 난 것은 링버퍼의 크기가 가득찼다는 의미이므로, resize할지 말지는 오류 생길시 가서 테스트하면서 진행
-        int error = WSAGetLastError();
-        std::cout << "Error : UnicastData(), It might be full of sendQ" << error << "\n";
-        DebugBreak();
-    }
-}
-
-void UnicastPacket(SESSION* includeSession, PACKET_HEADER* pHeader, CPacket* pPacket)
-{
-    UnicastData(includeSession, pHeader, sizeof(PACKET_HEADER));
-    UnicastData(includeSession, pPacket, pHeader->bySize);
-
-    pPacket->MoveReadPos(pHeader->bySize);
-    pPacket->Clear();
-}
-
-SESSION* createSession(SOCKET ClientSocket, SOCKADDR_IN ClientAddr, UINT32 id, UINT16 posX, UINT16 posY, UINT8 hp, UINT8 direction)
-{
-    CWinSockManager<SESSION>& winSockManager = CWinSockManager<SESSION>::getInstance();
-
-    // accept가 완료되었다면 세션에 등록 후, 해당 세션에 패킷 전송
-    SESSION* Session = new SESSION;
-    Session->isAlive = true;
-
-    // 소켓 정보 추가
-    Session->sock = ClientSocket;
-
-    // IP / PORT 정보 추가
-    memcpy(Session->IP, winSockManager.GetIP(ClientAddr).c_str(), sizeof(Session->IP));
-    Session->port = winSockManager.GetPort(ClientAddr);
-
-    // UID 부여
-    Session->uid = id;
-
-    Session->flagField = 0;
-
-    CPlayer* pPlayer = new CPlayer(posX, posY, direction, hp);
-    pPlayer->SetFlagField(&Session->flagField);
-    pPlayer->SetSpeed(MOVE_X_PER_FRAME, MOVE_Y_PER_FRAME);
-
-    Session->pPlayer = pPlayer;
-
-    return Session;
-}
-
-bool netPacketProc_MoveStart(SESSION* pSession, CPacket* _pPacket)
-{
-    UINT8 direction;
-    UINT16 x;
-    UINT16 y;
-
-    *_pPacket >> direction;
-    *_pPacket >> x;
-    *_pPacket >> y;
-
-    // 메시지 수신 로그 확인
-    // ==========================================================================================================
-    // 서버의 위치와 받은 패킷의 위치값이 너무 큰 차이가 난다면 끊어버림                           .
-    // 본 게임의 좌표 동기화 구조는 단순한 키보드 조작 (클라어안트의 션처리, 서버의 후 반영) 방식으로
-    // 클라이언트의 좌표를 그대로 믿는 방식을 택하고 있음.
-    // 실제 온라인 게임이라면 클라이언트에서 목적지를 공유하는 방식을 택해야함.
-    // 지금은 간단한 구현을 목적으로 하고 있으므로 오차범위 내에서 클라이언트 좌표를 믿도록 한다.
-    // ==========================================================================================================
-
-    UINT16 posX, posY;
-    pSession->pPlayer->getPosition(posX, posY);
-    if (
-        std::abs(posX - x) > dfERROR_RANGE ||
-        std::abs(posY - y) > dfERROR_RANGE
-        )
-    {
-        NotifyClientDisconnected(pSession);
-
-        // 로그 찍을거면 여기서 찍을 것
-        int gapX = std::abs(posX - x);
-        int gapY = std::abs(posY - y);
-        DebugBreak();
-
-        return false;
-    }
-
-    // ==========================================================================================================
-    // 동작을 변경. 지금 구현에선 동작번호가 방향값. 내부에서 바라보는 방향도 변경
-    // ==========================================================================================================
-    pSession->pPlayer->SetDirection(direction);
-    
-
-    // ==========================================================================================================
-    // 당사자를 제외한, 현재 접속중인 모든 사용자에게 패킷을 뿌림.
-    // ==========================================================================================================
-    PACKET_HEADER header;
-    CPacket Packet;
-    mpMoveStart(&header, &Packet, pSession->uid, pSession->pPlayer->GetDirection(), posX, posY);
-    BroadcastPacket(pSession, &header, &Packet);
-
-    
-    //=====================================================================================================================================
-    // 이동 연산 시작을 알림
-    //=====================================================================================================================================
-    pSession->pPlayer->SetFlag(FLAG_MOVING, true);
-
-    return true;
-}
-
-bool netPacketProc_MoveStop(SESSION* pSession, CPacket* _pPacket)
-{
-    // 현재 선택된 클라이언트가 서버에게 움직임을 멈출 것이라 요청
-    // 1. 받은 데이터 처리
-    // 2. PACKET_SC_MOVE_STOP 을 브로드캐스팅
-    // 3. 서버 내에서 이동 연산 멈춤을 알림
-
-    //=====================================================================================================================================
-    // 1. 받은 데이터 처리
-    //=====================================================================================================================================
-    UINT8 direction;
-    UINT16 x;
-    UINT16 y;
-    *_pPacket >> direction;
-    *_pPacket >> x;
-    *_pPacket >> y;
-
-    pSession->pPlayer->SetDirection(direction);
-    pSession->pPlayer->SetPosition(x, y);
-
-
-    //=====================================================================================================================================
-    // 2. PACKET_SC_MOVE_STOP 를 브로드캐스팅
-    //=====================================================================================================================================
-    PACKET_HEADER header;
-    CPacket Packet;
-    mpMoveStop(&header, &Packet, pSession->uid, direction, x, y);
-
-    BroadcastPacket(pSession, &header, &Packet);
-
-    //=====================================================================================================================================
-    // 3. 서버 내에서 이동 연산 멈춤을 알림
-    //=====================================================================================================================================
-    pSession->pPlayer->SetFlag(FLAG_MOVING, false);
-
-    return true;
-}
-
-bool netPacketProc_ATTACK1(SESSION* pSession, CPacket* pPacket)
-{
-    // 클라이언트로 부터 공격 메시지가 들어옴.
-    // g_clientList를 순회하며 공격 1의 범위를 연산해서 데미지를 넣어줌.
-    // 1. dfPACKET_SC_ATTACK1 을 브로드캐스팅
-    // 2. 공격받을 캐릭터를 검색. 검색에 성공하면 3, 4번 절차 진행
-    // 3. dfPACKET_SC_DAMAGE 를 브로드캐스팅
-    // 4. 만약 체력이 0 이하로 떨어졌다면 dfPACKET_SC_DELETE_CHARACTER 를 브로드캐스팅하고, 서버에서 삭제할 수 있도록 함 -> 이 부분은 로직에서 처리하도록 바꿈.
-
-    //=====================================================================================================================================
-    // 1. dfPACKET_SC_ATTACK1 을 브로드캐스팅
-    //=====================================================================================================================================
-    UINT8 direction;
-    UINT16 x;
-    UINT16 y;
-
-    *pPacket >> direction;
-    *pPacket >> x;
-    *pPacket >> y;
-
-    pSession->pPlayer->SetPosition(x, y);
-
-    PACKET_HEADER header;
-    CPacket Packet;
-    mpAttack1(&header, &Packet, pSession->uid, pSession->pPlayer->GetDirection(), x, y);
-    BroadcastPacket(pSession, &header, &Packet);
-
-    //=====================================================================================================================================
-    // 2. 공격받을 캐릭터를 검색. 검색에 성공하면 3, 4번 절차 진행
-    //=====================================================================================================================================
-
-    // 내가 바라보는 방향에 따라 공격 범위가 달라짐.
-    UINT16 left, right, top, bottom;
-    UINT16 posX, posY;
-    pSession->pPlayer->getPosition(posX, posY);
-
-    // 왼쪽을 바라보고 있었다면
-    if (pSession->pPlayer->GetFacingDirection() == dfPACKET_MOVE_DIR_LL)
-    {
-        left = posX - dfATTACK1_RANGE_X;
-        right = posX;
-    }
-    // 오른쪽을 바라보고 있었다면
-    else
-    {
-        left = posX;
-        right = posX + dfATTACK1_RANGE_X;
-    }
-
-    top = posY - dfATTACK1_RANGE_Y;
-    bottom = posY + dfATTACK1_RANGE_Y;
-
-    for (auto& client : g_clientList)
-    {
-        if (client->uid == pSession->uid)
-            continue;
-
-        client->pPlayer->getPosition(posX, posY);
-
-        // 다른 플레이어의 좌표가 공격 범위에 있을 경우
-        if (posX >= left && posX <= right &&
-            posY >= top && posY <= bottom)
-        {
-            //=====================================================================================================================================
-            // 3. dfPACKET_SC_DAMAGE 를 브로드캐스팅
-            //=====================================================================================================================================
-            // 1명만 데미지를 입도록 함
-            client->pPlayer->Damaged(dfATTACK1_DAMAGE);
-
-            CPacket Packet;
-            mpDamage(&header, &Packet, pSession->uid, client->uid, client->pPlayer->GetHp());
-            BroadcastPacket(nullptr, &header, &Packet);
-            
-            /*
-            //=====================================================================================================================================
-            // 4. 만약 체력이 0 이하로 떨어졌다면 dfPACKET_SC_DELETE_CHARACTER 를 브로드캐스팅하고, 서버에서 삭제할 수 있도록 함
-            //=====================================================================================================================================
-            if (packetDamage.damagedHP <= 0)
-            {
-                PACKET_SC_DELETE_CHARACTER packetDeleteCharacter;
-                mpDeleteCharacter(&header, &packetDeleteCharacter, client->uid);
-
-                BroadcastPacket(nullptr, &header, &packetDeleteCharacter);
-
-                // 서버에서 삭제할 수 있도록 isAlive를 false로 설정
-                client->isAlive = false;
-            }
-            */
-
-            // 여기서 break를 없애면 광역 데미지
-            break;
-        }
-    }
-
-    return true;
-}
-
-bool netPacketProc_ATTACK2(SESSION* pSession, CPacket* pPacket)
-{
-    // 클라이언트로 부터 공격 메시지가 들어옴.
-    // g_clientList를 순회하며 공격 2의 범위를 연산해서 데미지를 넣어줌.
-    // 1. dfPACKET_SC_ATTACK2 을 브로드캐스팅
-    // 2. 공격받을 캐릭터를 검색. 검색에 성공하면 3, 4번 절차 진행
-    // 3. dfPACKET_SC_DAMAGE 를 브로드캐스팅
-    // 4. 만약 체력이 0 이하로 떨어졌다면 dfPACKET_SC_DELETE_CHARACTER 를 브로드캐스팅하고, 서버에서 삭제할 수 있도록 함
-
-    //=====================================================================================================================================
-    // 1. dfPACKET_SC_ATTACK2 을 브로드캐스팅
-    //=====================================================================================================================================
-    UINT8 direction;
-    UINT16 x;
-    UINT16 y;
-
-    *pPacket >> direction;
-    *pPacket >> x;
-    *pPacket >> y;
-
-    pSession->pPlayer->SetPosition(x, y);
-
-    PACKET_HEADER header;
-    CPacket Packet;
-    mpAttack2(&header, &Packet, pSession->uid, pSession->pPlayer->GetDirection(), x, y);
-    BroadcastPacket(pSession, &header, &Packet);
-
-    //=====================================================================================================================================
-    // 2. 공격받을 캐릭터를 검색. 검색에 성공하면 3, 4번 절차 진행
-    //=====================================================================================================================================
-
-    // 내가 바라보는 방향에 따라 공격 범위가 달라짐.
-    UINT16 left, right, top, bottom;
-    UINT16 posX, posY;
-    pSession->pPlayer->getPosition(posX, posY);
-
-    // 왼쪽을 바라보고 있었다면
-    if (pSession->pPlayer->GetFacingDirection() == dfPACKET_MOVE_DIR_LL)
-    {
-        left = posX - dfATTACK2_RANGE_X;
-        right = posX;
-    }
-    // 오른쪽을 바라보고 있었다면
-    else
-    {
-        left = posX;
-        right = posX + dfATTACK2_RANGE_X;
-    }
-
-    top = posY - dfATTACK2_RANGE_Y;
-    bottom = posY + dfATTACK2_RANGE_Y;
-
-    for (auto& client : g_clientList)
-    {
-        if (client->uid == pSession->uid)
-            continue;
-
-        client->pPlayer->getPosition(posX, posY);
-
-        // 다른 플레이어의 좌표가 공격 범위에 있을 경우
-        if (posX >= left && posX <= right &&
-            posY >= top && posY <= bottom)
-        {
-            //=====================================================================================================================================
-            // 3. dfPACKET_SC_DAMAGE 를 브로드캐스팅
-            //=====================================================================================================================================
-            // 1명만 데미지를 입도록 함
-            client->pPlayer->Damaged(dfATTACK2_DAMAGE);
-
-            PACKET_SC_DAMAGE packetDamage;
-            CPacket Packet;
-            mpDamage(&header, &Packet, pSession->uid, client->uid, client->pPlayer->GetHp());
-
-            BroadcastPacket(nullptr, &header, &Packet);
-
-            /*
-            //=====================================================================================================================================
-            // 4. 만약 체력이 0 이하로 떨어졌다면 dfPACKET_SC_DELETE_CHARACTER 를 브로드캐스팅하고, 서버에서 삭제할 수 있도록 함
-            //=====================================================================================================================================
-            if (packetDamage.damagedHP <= 0)
-            {
-                PACKET_SC_DELETE_CHARACTER packetDeleteCharacter;
-                mpDeleteCharacter(&header, &packetDeleteCharacter, client->uid);
-
-                BroadcastPacket(nullptr, &header, &packetDeleteCharacter);
-
-                // 서버에서 삭제할 수 있도록 isAlive를 false로 설정
-                client->isAlive = false;
-            }
-            */
-
-            // 여기서 break를 없애면 광역 데미지
-            break;
-        }
-    }
-
-    return true;
-}
-
-bool netPacketProc_ATTACK3(SESSION* pSession, CPacket* pPacket)
-{
-    // 클라이언트로 부터 공격 메시지가 들어옴.
-     // g_clientList를 순회하며 공격 3의 범위를 연산해서 데미지를 넣어줌.
-     // 1. dfPACKET_SC_ATTACK3 을 브로드캐스팅
-     // 2. 공격받을 캐릭터를 검색. 검색에 성공하면 3, 4번 절차 진행
-     // 3. dfPACKET_SC_DAMAGE 를 브로드캐스팅
-     // 4. 만약 체력이 0 이하로 떨어졌다면 dfPACKET_SC_DELETE_CHARACTER 를 브로드캐스팅하고, 서버에서 삭제할 수 있도록 함
-
-     //=====================================================================================================================================
-     // 1. dfPACKET_SC_ATTACK3 을 브로드캐스팅
-     //=====================================================================================================================================
-    UINT8 direction;
-    UINT16 x;
-    UINT16 y;
-
-    *pPacket >> direction;
-    *pPacket >> x;
-    *pPacket >> y;
-
-    pSession->pPlayer->SetPosition(x, y);
-
-    PACKET_HEADER header;
-    CPacket Packet;
-    mpAttack3(&header, &Packet, pSession->uid, pSession->pPlayer->GetDirection(), x, y);
-    BroadcastPacket(pSession, &header, &Packet);
-
-    //=====================================================================================================================================
-    // 2. 공격받을 캐릭터를 검색. 검색에 성공하면 3, 4번 절차 진행
-    //=====================================================================================================================================
-
-    // 내가 바라보는 방향에 따라 공격 범위가 달라짐.
-    UINT16 left, right, top, bottom;
-    UINT16 posX, posY;
-    pSession->pPlayer->getPosition(posX, posY);
-
-    // 왼쪽을 바라보고 있었다면
-    if (pSession->pPlayer->GetFacingDirection() == dfPACKET_MOVE_DIR_LL)
-    {
-        left = posX - dfATTACK3_RANGE_X;
-        right = posX;
-    }
-    // 오른쪽을 바라보고 있었다면
-    else
-    {
-        left = posX;
-        right = posX + dfATTACK3_RANGE_X;
-    }
-
-    top = posY - dfATTACK3_RANGE_Y;
-    bottom = posY + dfATTACK3_RANGE_Y;
-
-    for (auto& client : g_clientList)
-    {
-        if (client->uid == pSession->uid)
-            continue;
-
-        client->pPlayer->getPosition(posX, posY);
-
-        // 다른 플레이어의 좌표가 공격 범위에 있을 경우
-        if (posX >= left && posX <= right &&
-            posY >= top && posY <= bottom)
-        {
-            //=====================================================================================================================================
-            // 3. dfPACKET_SC_DAMAGE 를 브로드캐스팅
-            //=====================================================================================================================================
-            // 1명만 데미지를 입도록 함
-            client->pPlayer->Damaged(dfATTACK3_DAMAGE);
-
-            CPacket Packet;
-            mpDamage(&header, &Packet, pSession->uid, client->uid, client->pPlayer->GetHp());
-
-            BroadcastPacket(nullptr, &header, &Packet);
-
-            /*
-            //=====================================================================================================================================
-            // 4. 만약 체력이 0 이하로 떨어졌다면 dfPACKET_SC_DELETE_CHARACTER 를 브로드캐스팅하고, 서버에서 삭제할 수 있도록 함
-            //=====================================================================================================================================
-            if (packetDamage.damagedHP <= 0)
-            {
-                PACKET_SC_DELETE_CHARACTER packetDeleteCharacter;
-                mpDeleteCharacter(&header, &packetDeleteCharacter, client->uid);
-
-                BroadcastPacket(nullptr, &header, &packetDeleteCharacter);
-
-                // 서버에서 삭제할 수 있도록 isAlive를 false로 설정
-                client->isAlive = false;
-            }
-            */
-
-            // 여기서 break를 없애면 광역 데미지
-            break;
-        }
-    }
-
-    return true;
-}
-
-bool PacketProc(SESSION* pSession, PACKET_TYPE packetType, CPacket* pPacket)
-{
-    switch (packetType)
-    {
-    case PACKET_TYPE::CS_MOVE_START:
-        return netPacketProc_MoveStart(pSession, pPacket);
-        break;
-    case PACKET_TYPE::CS_MOVE_STOP:
-        return netPacketProc_MoveStop(pSession, pPacket);
-        break;
-    case PACKET_TYPE::CS_ATTACK1:
-        return netPacketProc_ATTACK1(pSession, pPacket);
-        break;
-    case PACKET_TYPE::CS_ATTACK2:
-        return netPacketProc_ATTACK2(pSession, pPacket);
-        break;
-    case PACKET_TYPE::CS_ATTACK3:
-        return netPacketProc_ATTACK3(pSession, pPacket);
-        break;
-    //case PACKET_TYPE::CS_SYNC:
-    //    break;
-    default:
-        break;
-    }
-    
-    return true;
-}
 
 void netProc_Recv(SESSION* pSession)
 {
@@ -891,7 +280,7 @@ void netProc_Recv(SESSION* pSession)
         // 7. 헤더의 타입에 따른 분기를 위해 패킷 프로시저 호출
         CPacket Packet;
         Packet.PutData(tempPacketBuffer, recvQDeqRetVal);
-        if (!PacketProc(pSession, static_cast<PACKET_TYPE>(header.byType), &Packet))
+        if (!serverStub.PacketProc(pSession, static_cast<PACKET_TYPE>(header.byType), &Packet))
         {
             NotifyClientDisconnected(pSession);
             break;
@@ -925,26 +314,17 @@ void netProc_Accept()
     // 2. PACKET_SC_CREATE_OTHER_CHARACTER 에 연결된 세션의 정보를 담아 브로드캐스트
     // 3. PACKET_SC_CREATE_OTHER_CHARACTER 에 g_clientList에 있는 모든 캐릭터 정보를 담아 연결된 세션에게 전송
 
-    PACKET_HEADER header;
-    CPacket Packet;
-
     //=====================================================================================================================================
     // 1. 연결된 세션에 PACKET_SC_CREATE_MY_CHARACTER 를 전송
     //=====================================================================================================================================
     UINT16 posX, posY;
     Session->pPlayer->getPosition(posX, posY);
-    mpCreateMyCharacter(&header, &Packet, Session->uid, Session->pPlayer->GetDirection(), posX, posY, Session->pPlayer->GetHp());
-
-    UnicastPacket(Session, &header, &Packet);
+    serverProxy.SC_CreateMyCharacter_ForSingle(Session, Session->uid, Session->pPlayer->GetDirection(), posX, posY, Session->pPlayer->GetHp());
 
     //=====================================================================================================================================
     // 2. PACKET_SC_CREATE_OTHER_CHARACTER 에 연결된 세션의 정보를 담아 브로드캐스트
     //=====================================================================================================================================
-
-    mpCreateOtherCharacter(&header, &Packet, Session->uid, Session->pPlayer->GetDirection(), posX, posY, Session->pPlayer->GetHp());
-
-    // 접속되어 있는 모든 client에 새로 접속한 client의 정보 broadcast 시도
-    BroadcastPacket(NULL, &header, &Packet);
+    serverProxy.SC_CreateOtherCharacter_ForAll(Session, Session->uid, Session->pPlayer->GetDirection(), posX, posY, Session->pPlayer->GetHp());
 
     //=====================================================================================================================================
     // 3. PACKET_SC_CREATE_OTHER_CHARACTER 에 g_clientList에 있는 모든 캐릭터 정보를 담아 연결된 세션에게 전송
@@ -953,18 +333,13 @@ void netProc_Accept()
     // 새로운 연결을 시도하는 클라이언트에 기존 클라이언트 정보들을 전달
     for (const auto& client : g_clientList)
     {
-        Packet.Clear();
         client->pPlayer->getPosition(posX, posY);
-        mpCreateOtherCharacter(&header, &Packet, client->uid, client->pPlayer->GetDirection(), posX, posY, client->pPlayer->GetHp());
-
-        UnicastPacket(Session, &header, &Packet);
+        serverProxy.SC_CreateOtherCharacter_ForSingle(Session, client->uid, client->pPlayer->GetDirection(), posX, posY, client->pPlayer->GetHp());
 
         // 움직이고 있는 상황이라면
         if (client->pPlayer->isBitSet(FLAG_MOVING))
         {
-            Packet.Clear();
-            mpMoveStart(&header, &Packet, client->uid, client->pPlayer->GetDirection(), posX, posY);
-            UnicastPacket(Session, &header, &Packet);
+            serverProxy.SC_MoveStart_ForSingle(Session, client->uid, client->pPlayer->GetDirection(), posX, posY);
         }
     }
 

@@ -45,14 +45,38 @@
     <Filter Include="소스 파일\01. Manager\03. LogMgr">
       <UniqueIdentifier>{f8768c01-d7b9-4290-951e-1abfa8de7425}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\03. Packet\01. MakePacket">
-      <UniqueIdentifier>{e78a6d42-a7fc-4095-9e05-72e0f043bc3f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="소스 파일\03. Packet\02. Defines">
       <UniqueIdentifier>{9bb446de-28d8-4c83-bbbd-74cbca4e6063}</UniqueIdentifier>
     </Filter>
     <Filter Include="소스 파일\03. Packet\00. Packet">
       <UniqueIdentifier>{215ff4ef-f28b-4b7e-b67e-c4a739e4fcfb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\97. RPC">
+      <UniqueIdentifier>{3cf08a5a-f920-4f08-a105-784ef2a429c9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\97. RPC\00. Proxy">
+      <UniqueIdentifier>{258b79cd-b3ea-4e6d-a6c5-640dd7a62d23}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\97. RPC\01. Stub">
+      <UniqueIdentifier>{9325d0be-1332-4609-87a5-104d1267b28e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\97. RPC\02. ServerProxy">
+      <UniqueIdentifier>{47e1631e-3685-4589-8e53-b9466ccd3097}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\97. RPC\03. ServerStub">
+      <UniqueIdentifier>{7f0fbc0e-6750-4a91-a305-c04334d58176}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\96. StackWalker">
+      <UniqueIdentifier>{415ecb54-e554-4b5b-b329-691f1799c795}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\96. StackWalker\CustomException">
+      <UniqueIdentifier>{a0d21740-1db4-43ad-959b-dbdd72fc44c2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\95. Session">
+      <UniqueIdentifier>{bca0e829-a016-4362-8d92-5520f5f25d4a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\97. RPC\04. Convertor">
+      <UniqueIdentifier>{67c99e23-be5d-4aa1-a692-c8d494c992dc}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -68,11 +92,29 @@
     <ClCompile Include="Object.cpp">
       <Filter>소스 파일\01. Manager\02. ObjectMgr\Object</Filter>
     </ClCompile>
-    <ClCompile Include="makePacket.cpp">
-      <Filter>소스 파일\03. Packet\01. MakePacket</Filter>
-    </ClCompile>
     <ClCompile Include="Packet.cpp">
       <Filter>소스 파일\03. Packet\00. Packet</Filter>
+    </ClCompile>
+    <ClCompile Include="proxy.cpp">
+      <Filter>소스 파일\97. RPC\00. Proxy</Filter>
+    </ClCompile>
+    <ClCompile Include="stub.cpp">
+      <Filter>소스 파일\97. RPC\01. Stub</Filter>
+    </ClCompile>
+    <ClCompile Include="Session.cpp">
+      <Filter>소스 파일\95. Session</Filter>
+    </ClCompile>
+    <ClCompile Include="ServerProxy.cpp">
+      <Filter>소스 파일\97. RPC\02. ServerProxy</Filter>
+    </ClCompile>
+    <ClCompile Include="StackWalker.cpp">
+      <Filter>소스 파일\96. StackWalker</Filter>
+    </ClCompile>
+    <ClCompile Include="CustomException.cpp">
+      <Filter>소스 파일\96. StackWalker\CustomException</Filter>
+    </ClCompile>
+    <ClCompile Include="ServerStub.cpp">
+      <Filter>소스 파일\97. RPC\03. ServerStub</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -103,9 +145,6 @@
     <ClInclude Include="TimerManager.h">
       <Filter>소스 파일\01. Manager\01. TimerMgr</Filter>
     </ClInclude>
-    <ClInclude Include="makePacket.h">
-      <Filter>소스 파일\03. Packet\01. MakePacket</Filter>
-    </ClInclude>
     <ClInclude Include="LogManager.h">
       <Filter>소스 파일\01. Manager\03. LogMgr</Filter>
     </ClInclude>
@@ -117,6 +156,27 @@
     </ClInclude>
     <ClInclude Include="Packet.h">
       <Filter>소스 파일\03. Packet\00. Packet</Filter>
+    </ClInclude>
+    <ClInclude Include="proxy.h">
+      <Filter>소스 파일\97. RPC\00. Proxy</Filter>
+    </ClInclude>
+    <ClInclude Include="stub.h">
+      <Filter>소스 파일\97. RPC\01. Stub</Filter>
+    </ClInclude>
+    <ClInclude Include="Session.h">
+      <Filter>소스 파일\95. Session</Filter>
+    </ClInclude>
+    <ClInclude Include="ServerProxy.h">
+      <Filter>소스 파일\97. RPC\02. ServerProxy</Filter>
+    </ClInclude>
+    <ClInclude Include="StackWalker.h">
+      <Filter>소스 파일\96. StackWalker</Filter>
+    </ClInclude>
+    <ClInclude Include="CustomException.h">
+      <Filter>소스 파일\96. StackWalker\CustomException</Filter>
+    </ClInclude>
+    <ClInclude Include="ServerStub.h">
+      <Filter>소스 파일\97. RPC\03. ServerStub</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
