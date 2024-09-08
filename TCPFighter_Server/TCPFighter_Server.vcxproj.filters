@@ -130,9 +130,6 @@
     <ClInclude Include="LogManager.h">
       <Filter>소스 파일\01. Manager\03. LogMgr</Filter>
     </ClInclude>
-    <ClInclude Include="PacketDefine.h">
-      <Filter>소스 파일\03. Packet\02. Defines</Filter>
-    </ClInclude>
     <ClInclude Include="PacketHeader.h">
       <Filter>소스 파일\03. Packet\02. Defines</Filter>
     </ClInclude>

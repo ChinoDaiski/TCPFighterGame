@@ -192,7 +192,6 @@
     <ClInclude Include="Player.h" />
     <ClInclude Include="Singleton.h" />
     <ClInclude Include="WinSockManager.h" />
-    <ClInclude Include="PacketDefine.h" />
     <ClInclude Include="PacketHeader.h" />
     <ClInclude Include="RingBuffer.h" />
   </ItemGroup>

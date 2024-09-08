@@ -222,6 +222,14 @@ def generate_enum_file(packet_enum, output_filename):
     sorted_enum = sorted(packet_enum.items(), key=lambda x: x[0])
     with open(output_filename, 'w', encoding='utf-8') as file:
         file.write('#pragma once\n\n')
+        
+        # Define 항목 생성
+        for packet_id, packet_name in sorted_enum:
+            file.write(f'#define dfPACKET_{packet_name} {packet_id}\n')
+        
+        file.write('\n')
+        
+        # Enum 항목 생성
         file.write('enum class PACKET_TYPE : BYTE\n')
         file.write('{\n')
         

@@ -21,7 +21,7 @@
 #define dfERROR_RANGE		50
 
 //-----------------------------------------------------------------
-// 공격범위.
+// 공격범위
 //-----------------------------------------------------------------
 #define dfATTACK1_RANGE_X		80
 #define dfATTACK2_RANGE_X		90
@@ -43,3 +43,16 @@
 // 네트워크 패킷 코드
 //-----------------------------------------------------------------
 #define dfNETWORK_PACKET_CODE 0x89
+
+
+//-----------------------------------------------------------------
+// 이동 정보
+//-----------------------------------------------------------------
+#define dfPACKET_MOVE_DIR_LL					0
+#define dfPACKET_MOVE_DIR_LU					1
+#define dfPACKET_MOVE_DIR_UU					2
+#define dfPACKET_MOVE_DIR_RU					3
+#define dfPACKET_MOVE_DIR_RR					4
+#define dfPACKET_MOVE_DIR_RD					5
+#define dfPACKET_MOVE_DIR_DD					6
+#define dfPACKET_MOVE_DIR_LD					7
