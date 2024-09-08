@@ -41,7 +41,7 @@ bool Stub::PacketProc(SESSION* pSession, PACKET_TYPE packetType, CPacket* pPacke
         *pPacket >> X;
         *pPacket >> Y;
 
-        CS_MOVE_START(pSession, Direction, X, Y);
+        return CS_MOVE_START(pSession, Direction, X, Y);
     }
     break;
     case PACKET_TYPE::CS_MOVE_STOP:
@@ -54,7 +54,7 @@ bool Stub::PacketProc(SESSION* pSession, PACKET_TYPE packetType, CPacket* pPacke
         *pPacket >> X;
         *pPacket >> Y;
 
-        CS_MOVE_STOP(pSession, Direction, X, Y);
+        return CS_MOVE_STOP(pSession, Direction, X, Y);
     }
     break;
     case PACKET_TYPE::CS_ATTACK1:
@@ -67,7 +67,7 @@ bool Stub::PacketProc(SESSION* pSession, PACKET_TYPE packetType, CPacket* pPacke
         *pPacket >> X;
         *pPacket >> Y;
 
-        CS_ATTACK1(pSession, Direction, X, Y);
+        return CS_ATTACK1(pSession, Direction, X, Y);
     }
     break;
     case PACKET_TYPE::CS_ATTACK2:
@@ -80,7 +80,7 @@ bool Stub::PacketProc(SESSION* pSession, PACKET_TYPE packetType, CPacket* pPacke
         *pPacket >> X;
         *pPacket >> Y;
 
-        CS_ATTACK2(pSession, Direction, X, Y);
+        return CS_ATTACK2(pSession, Direction, X, Y);
     }
     break;
     case PACKET_TYPE::CS_ATTACK3:
@@ -93,11 +93,12 @@ bool Stub::PacketProc(SESSION* pSession, PACKET_TYPE packetType, CPacket* pPacke
         *pPacket >> X;
         *pPacket >> Y;
 
-        CS_ATTACK3(pSession, Direction, X, Y);
+        return CS_ATTACK3(pSession, Direction, X, Y);
     }
     break;
     default:
+    return false;
         break;
     }
-    return true;
+    return false;
 }

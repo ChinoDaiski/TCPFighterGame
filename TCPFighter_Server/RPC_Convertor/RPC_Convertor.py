@@ -208,14 +208,15 @@ def generate_stub_cpp_file(packets, output_filename):
                 file.write(f'        *pPacket >> {field_name};\n')
             file.write('\n')
 
-            file.write(f'        {packet_name}(pSession, {", ".join(field_names)});\n')
+            file.write(f'        return {packet_name}(pSession, {", ".join(field_names)});\n')
             file.write('    }\n')
             file.write('    break;\n')
         
         file.write('    default:\n')
+        file.write('    return false;\n')
         file.write('        break;\n')
         file.write('    }\n')
-        file.write('    return true;\n')
+        file.write('    return false;\n')
         file.write('}\n')
 
 def generate_enum_file(packet_enum, output_filename):
