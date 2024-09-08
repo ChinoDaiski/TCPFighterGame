@@ -92,8 +92,8 @@ def generate_proxy_header_file(packets, output_filename):
             method_name_all = f"{packet_name}_FOR_All"
             method_name_single = f"{packet_name}_FOR_SINGLE"
             # 패킷 메서드 정의
-            file.write(f'    virtual void {method_name_all}(SESSION* pSession, {fields});\n')
-            file.write(f'    virtual void {method_name_single}(SESSION* pSession, {fields});\n\n')
+            file.write(f'    void {method_name_all}(SESSION* pSession, {fields});\n')
+            file.write(f'    void {method_name_single}(SESSION* pSession, {fields});\n\n')
         
         file.write('};\n')
 
